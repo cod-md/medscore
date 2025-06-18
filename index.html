@@ -34,6 +34,153 @@
             padding: 30px;
             text-align: center;
             color: white;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode .container {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid #333;
+        }
+
+        body.dark-mode .stage-selector {
+            background: #111111;
+            border: 1px solid #333;
+        }
+
+        body.dark-mode .stage-selector h2 {
+            color: #ffffff;
+        }
+
+        body.dark-mode .stage-option label {
+            background: #1a1a1a;
+            border-color: #333;
+            color: #ffffff;
+        }
+
+        body.dark-mode .stage-option label:hover {
+            background: #2a2a2a;
+            border-color: #4facfe;
+        }
+
+        body.dark-mode .subject-card {
+            background: #111111;
+            border: 1px solid #333;
+        }
+
+        body.dark-mode .subject-name {
+            color: #ffffff;
+        }
+
+        body.dark-mode .group-subjects {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        body.dark-mode .group-title {
+            color: #ffffff;
+        }
+
+        body.dark-mode .grade-option label {
+            background: #1a1a1a;
+            border-color: #333;
+            color: #ffffff;
+        }
+
+        body.dark-mode .grade-option label:hover {
+            background: #2a2a2a;
+            border-color: #4facfe;
+        }
+
+        body.dark-mode .results {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid #333;
+        }
+
+        body.dark-mode .average-display {
+            color: #ffffff;
+        }
+
+        body.dark-mode .average-label {
+            color: #cccccc;
+        }
+
+        body.dark-mode .legend {
+            background: #111111;
+            border: 1px solid #333;
+        }
+
+        body.dark-mode .legend h3 {
+            color: #ffffff;
+        }
+
+        body.dark-mode .legend-item {
+            background: #1a1a1a;
+        }
+
+        body.dark-mode .legend-grade {
+            color: #ffffff;
+        }
+
+        body.dark-mode .legend-range {
+            color: #cccccc;
+        }
+
+        /* AMOLED optimizations */
+        @media (prefers-color-scheme: dark) {
+            body.dark-mode {
+                background: #000000;
+            }
+            
+            body.dark-mode .container {
+                background: rgba(0, 0, 0, 0.98);
+            }
+            
+            body.dark-mode .subject-card,
+            body.dark-mode .stage-selector,
+            body.dark-mode .group-subjects {
+                background: #000000;
+                border: 1px solid #222;
+            }
+            
+            body.dark-mode .grade-option label {
+                background: #000000;
+                border-color: #222;
+            }
+            
+            body.dark-mode .grade-option label:hover {
+                background: #111111;
+            }
+            
+            body.dark-mode .results {
+                background: #000000;
+                border: 1px solid #222;
+            }
         }
 
         .header h1 {
@@ -269,6 +416,9 @@
 <body>
     <div class="container">
         <div class="header">
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+                <span id="themeIcon">🌙</span>
+            </button>
             <h1>حساب المعدل</h1>
             <p>نظام التقديرات من 5 درجات</p>
         </div>
@@ -320,9 +470,9 @@
 
     <script>
         const stage1Subjects = [
+            { name: 'الكيمياء', weight: 1.18 },
             { name: 'التشريح', weight: 1.05 },
             { name: 'الأحياء', weight: 0.79 },
-            { name: 'الكيمياء', weight: 1.18 },
             { name: 'الفيزياء', weight: 0.79 }
         ];
 
@@ -333,13 +483,13 @@
         ];
 
         const stage2Subjects = [
+            { name: 'الفسلجة', weight: 1.428 },
             { name: 'التشريح', weight: 1.19 },
             { name: 'الكيمياء', weight: 1.19 },
-            { name: 'الفسلجة', weight: 1.428 },
             { name: 'الهستو', weight: 0.71 },
             { name: 'الامبريو', weight: 0.238 },
             { name: 'الحاسوب', weight: 0.115 },
-            { name: 'جرائم حزب البعث', weight: 0.115 }
+            { name: 'الحقوق', weight: 0.115 }
         ];
 
         const grades = [
@@ -351,6 +501,21 @@
         ];
 
         let currentStage = null;
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            document.getElementById('themeIcon').textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        function initializeTheme() {
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
+        }
 
         function createSubjectCard(subject, index, isGroup = false, containerPrefix = '') {
             return `
@@ -553,6 +718,9 @@
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize theme
+            initializeTheme();
+            
             // Add event listeners for stage selection
             document.querySelectorAll('input[name="stage"]').forEach(radio => {
                 radio.addEventListener('change', handleStageChange);
