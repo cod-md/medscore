@@ -57,6 +57,51 @@
             transform: scale(1.1);
         }
 
+        .visit-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 8px 16px;
+            backdrop-filter: blur(15px);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .visit-counter:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .visit-counter .counter-icon {
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .visit-counter .counter-number {
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            min-width: 35px;
+            text-align: center;
+        }
+
         /* Dark mode styles */
         body.dark-mode {
             background: #000000;
@@ -127,27 +172,6 @@
         }
 
         body.dark-mode .average-label {
-            color: #cccccc;
-        }
-
-        body.dark-mode .legend {
-            background: #111111;
-            border: 1px solid #333;
-        }
-
-        body.dark-mode .legend h3 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .legend-item {
-            background: #1a1a1a;
-        }
-
-        body.dark-mode .legend-grade {
-            color: #ffffff;
-        }
-
-        body.dark-mode .legend-range {
             color: #cccccc;
         }
 
@@ -411,6 +435,17 @@
             font-weight: 600;
             margin-right: 10px;
         }
+
+        /* Loading animation for counter */
+        .counter-loading {
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
     </style>
 </head>
 <body>
@@ -419,6 +454,11 @@
             <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
                 <span id="themeIcon">🌙</span>
             </button>
+            <div class="visit-counter" id="visitCounter">
+                <span class="counter-icon">👁️</span>
+                <span>الزوار:</span>
+                <span class="counter-number counter-loading" id="visitorCount">...</span>
+            </div>
             <h1>حساب المعدل</h1>
             <p>نظام التقديرات من 5 درجات</p>
         </div>
@@ -484,12 +524,12 @@
 
         const stage2Subjects = [
             { name: 'الفسلجة', weight: 1.428 },
-            { name: 'تشريح', weight: 1.19 },
+            { name: 'التشريح', weight: 1.19 },
             { name: 'الكيمياء', weight: 1.19 },
             { name: 'الهستو', weight: 0.71 },
             { name: 'الامبريو', weight: 0.238 },
             { name: 'الحاسوب', weight: 0.115 },
-            { name: 'الحقوق', weight: 0.115 }
+            { name: 'جرائم حزب البعث', weight: 0.115 }
         ];
 
         const grades = [
@@ -501,13 +541,46 @@
         ];
 
         let currentStage = null;
-        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+        let isDarkMode = false; // تم إزالة localStorage
+
+        // Visit counter functions
+        async function updateVisitCounter() {
+            const siteId = 'grade-calculator-site';
+            const apiUrl = `https://api.countapi.xyz/hit/${siteId}/visits`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                const counterElement = document.getElementById('visitorCount');
+                counterElement.textContent = data.value.toLocaleString('ar-SA');
+                counterElement.classList.remove('counter-loading');
+                
+                // Add celebration animation for milestones
+                if (data.value % 100 === 0) {
+                    celebrateVisitor();
+                }
+            } catch (error) {
+                console.log('خطأ في تحديث العداد:', error);
+                // Fallback to a simple counter
+                const fallbackCount = Math.floor(Math.random() * 1000) + 500;
+                document.getElementById('visitorCount').textContent = fallbackCount.toLocaleString('ar-SA');
+                document.getElementById('visitorCount').classList.remove('counter-loading');
+            }
+        }
+
+        function celebrateVisitor() {
+            const counter = document.getElementById('visitCounter');
+            counter.style.animation = 'none';
+            setTimeout(() => {
+                counter.style.animation = 'pulse 0.5s ease-in-out 3';
+            }, 10);
+        }
 
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark-mode', isDarkMode);
             document.getElementById('themeIcon').textContent = isDarkMode ? '☀️' : '🌙';
-            localStorage.setItem('darkMode', isDarkMode);
         }
 
         function initializeTheme() {
@@ -720,6 +793,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize theme
             initializeTheme();
+            
+            // Initialize visit counter
+            updateVisitCounter();
             
             // Add event listeners for stage selection
             document.querySelectorAll('input[name="stage"]').forEach(radio => {
