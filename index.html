@@ -414,7 +414,7 @@
                 <span id="themeIcon">🌙</span>
             </button>
             <h1>حساب المعدل</h1>
-            <p>نظام التقديرات من 5 درجات</p>
+            <p>نظام تقديرات مختلف لكل مرحلة</p>
         </div>
 
         <div class="content">
@@ -472,7 +472,7 @@
 
             <div class="results" id="results" style="display: none;">
                 <div class="average-display" id="average-score">0.00</div>
-                <div class="average-label">النتيجة النهائية من 5</div>
+                <div class="average-label" id="average-label"></div>
             </div>
         </div>
         
@@ -572,69 +572,41 @@
         function initializeStage1() {
             const container = document.getElementById('stage1-container');
             const groupContainer = document.getElementById('group-subjects-container');
-            
             container.innerHTML = '';
             groupContainer.innerHTML = '';
-            
-            stage1Subjects.forEach((subject, index) => {
-                container.innerHTML += createSubjectCard(subject, index, false, 'stage1_');
-            });
-            
-            stage1GroupSubjects.forEach((subject, index) => {
-                groupContainer.innerHTML += createSubjectCard(subject, index, true, 'group_');
-            });
+            stage1Subjects.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage1_'));
+            stage1GroupSubjects.forEach((subject, index) => groupContainer.innerHTML += createSubjectCard(subject, index, true, 'group_'));
         }
 
         function initializeStage2() {
             const container = document.getElementById('stage2-container');
             container.innerHTML = '';
-            
-            stage2Subjects.forEach((subject, index) => {
-                container.innerHTML += createSubjectCard(subject, index, false, 'stage2_');
-            });
+            stage2Subjects.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage2_'));
         }
         
         function initializeStage3() {
             const container = document.getElementById('stage3-container');
             container.innerHTML = '';
-            
-            stage3Subjects.forEach((subject, index) => {
-                container.innerHTML += createSubjectCard(subject, index, false, 'stage3_');
-            });
+            stage3Subjects.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage3_'));
         }
 
         function initializeStage4() {
             const container = document.getElementById('stage4-container');
             container.innerHTML = '';
-            
-            stage4Subjects.forEach((subject, index) => {
-                container.innerHTML += createSubjectCard(subject, index, false, 'stage4_');
-            });
+            stage4Subjects.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage4_'));
         }
 
         function handleStageChange() {
-            const selectedStage = document.querySelector('input[name="stage"]:checked');
-            if (!selectedStage) return;
+            currentStage = document.querySelector('input[name="stage"]:checked').value;
+            document.querySelectorAll('.subjects-section').forEach(section => section.classList.remove('active'));
             
-            currentStage = selectedStage.value;
-            
-            document.querySelectorAll('.subjects-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            if (currentStage === '1') {
-                document.getElementById('stage1-subjects').classList.add('active');
-                initializeStage1();
-            } else if (currentStage === '2') {
-                document.getElementById('stage2-subjects').classList.add('active');
-                initializeStage2();
-            } else if (currentStage === '3') {
-                document.getElementById('stage3-subjects').classList.add('active');
-                initializeStage3();
-            } else if (currentStage === '4') {
-                document.getElementById('stage4-subjects').classList.add('active');
-                initializeStage4();
-            }
+            const stageId = `stage${currentStage}-subjects`;
+            document.getElementById(stageId).classList.add('active');
+
+            if (currentStage === '1') initializeStage1();
+            else if (currentStage === '2') initializeStage2();
+            else if (currentStage === '3') initializeStage3();
+            else if (currentStage === '4') initializeStage4();
             
             document.getElementById('calculateBtn').disabled = false;
             document.getElementById('results').style.display = 'none';
@@ -646,131 +618,129 @@
                 return;
             }
 
-            let totalWeightedScore = 0;
-            let totalWeight = 0;
             let allSelected = true;
-            let subjects;
-            let prefix;
-
-            if (currentStage === '1') {
-                // Handle stage 1 separately due to grouped subjects
-                stage1Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
-                    if (selectedGrade) {
-                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
-                        totalWeight += subject.weight;
-                    } else {
-                        allSelected = false;
-                    }
-                });
-
-                let groupWeightedScore = 0;
-                let groupCount = 0;
-                stage1GroupSubjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
-                    if (selectedGrade) {
-                        groupWeightedScore += parseInt(selectedGrade.value);
-                        groupCount++;
-                    } else {
-                        allSelected = false;
-                    }
-                });
-
-                if (groupCount === stage1GroupSubjects.length) {
-                    const avgGroupGrade = groupWeightedScore / groupCount;
-                    totalWeightedScore += avgGroupGrade * 0.26;
-                    totalWeight += 0.26;
-                }
-
-                totalWeight += 0.39;
-                totalWeightedScore += 3 * 0.39; 
-
-            } else {
-                if (currentStage === '2') {
-                    subjects = stage2Subjects;
-                    prefix = 'stage2_';
-                } else if (currentStage === '3') {
-                    subjects = stage3Subjects;
-                    prefix = 'stage3_';
-                } else if (currentStage === '4') {
-                    subjects = stage4Subjects;
-                    prefix = 'stage4_';
-                }
-
-                subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="${prefix}subject_${index}"]:checked`);
-                    if (selectedGrade) {
-                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
-                        totalWeight += subject.weight;
-                    } else {
-                        allSelected = false;
-                    }
-                });
-            }
-
-            if (!allSelected) {
-                alert('يرجى اختيار تقدير لجميع المواد');
-                return;
-            }
-
-            let actualMinScore = 0;
-            let actualMaxScore = 0;
-            
-            if (currentStage === '1') {
-                 // Handle stage 1 range calculation
-                stage1Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
-                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                });
-
-                let groupMin = 0, groupMax = 0;
-                stage1GroupSubjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
-                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                    groupMin += ((gradeData.min / 100) * 5);
-                    groupMax += ((gradeData.max / 100) * 5);
-                });
-                actualMinScore += (groupMin / stage1GroupSubjects.length) * 0.26;
-                actualMaxScore += (groupMax / stage1GroupSubjects.length) * 0.26;
-
-                actualMinScore += ((70 / 100) * 5) * 0.39;
-                actualMaxScore += ((79.99 / 100) * 5) * 0.39;
-            } else {
-                // Handle range calculation for other stages
-                 subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="${prefix}subject_${index}"]:checked`);
-                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                });
-            }
-            
-            const finalMinScore = (actualMinScore / totalWeight).toFixed(2);
-            const finalMaxScore = (actualMaxScore / totalWeight).toFixed(2);
-            const averageScore = ((parseFloat(finalMinScore) + parseFloat(finalMaxScore)) / 2).toFixed(2);
-            
             const scoreColor = isDarkMode ? '#4facfe' : '#333';
             const avgColor = isDarkMode ? '#667eea' : '#667eea';
+            const averageLabel = document.getElementById('average-label');
+            const averageScoreDiv = document.getElementById('average-score');
 
-            document.getElementById('average-score').innerHTML = `
-                <div style="font-size: 2rem; color: ${scoreColor}; margin-bottom: 15px;">النطاق المحتمل للمعدل</div>
-                <div style="font-size: 2.5rem; color: ${scoreColor}; margin-bottom: 20px; font-weight: 700;">
-                    ${finalMinScore} - ${finalMaxScore}
-                </div>
-                <div style="font-size: 1.8rem; color: ${avgColor}; border-top: 2px solid rgba(102, 126, 234, 0.2); padding-top: 15px; margin-top: 15px;">
-                    المتوسط التقريبي: <span style="font-weight: 700;">${averageScore}</span>
-                </div>
-            `;
-            
+            // --- Logic for Stage 4 (Score out of 20) ---
+            if (currentStage === '4') {
+                let totalWeightedMinScore = 0;
+                let totalWeightedMaxScore = 0;
+                let totalWeight = 0;
+
+                stage4Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage4_subject_${index}"]:checked`);
+                    if (selectedGrade) {
+                        const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                        totalWeightedMinScore += gradeData.min * subject.weight;
+                        totalWeightedMaxScore += gradeData.max * subject.weight;
+                        totalWeight += subject.weight;
+                    } else {
+                        allSelected = false;
+                    }
+                });
+
+                if (!allSelected) {
+                    alert('يرجى اختيار تقدير لجميع المواد');
+                    return;
+                }
+
+                const finalMinPercent = totalWeightedMinScore / totalWeight;
+                const finalMaxPercent = totalWeightedMaxScore / totalWeight;
+
+                const finalMinOutOf20 = (finalMinPercent / 100) * 20;
+                const finalMaxOutOf20 = (finalMaxPercent / 100) * 20;
+                const averageScoreOutOf20 = (finalMinOutOf20 + finalMaxOutOf20) / 2;
+
+                averageLabel.textContent = "النتيجة النهائية من 20";
+                averageScoreDiv.innerHTML = `
+                    <div style="font-size: 2rem; color: ${scoreColor}; margin-bottom: 15px;">النطاق المحتمل للمعدل</div>
+                    <div style="font-size: 2.5rem; color: ${scoreColor}; margin-bottom: 20px; font-weight: 700;">
+                        ${finalMinOutOf20.toFixed(2)} - ${finalMaxOutOf20.toFixed(2)}
+                    </div>
+                    <div style="font-size: 1.8rem; color: ${avgColor}; border-top: 2px solid rgba(102, 126, 234, 0.2); padding-top: 15px; margin-top: 15px;">
+                        المتوسط التقريبي: <span style="font-weight: 700;">${averageScoreOutOf20.toFixed(2)}</span>
+                    </div>
+                `;
+
+            // --- Logic for Stages 1, 2, 3 (Score out of 5) ---
+            } else {
+                let totalWeightedScore = 0;
+                let totalWeight = 0;
+                let actualMinScore = 0;
+                let actualMaxScore = 0;
+
+                if (currentStage === '1') {
+                    stage1Subjects.forEach((subject, index) => {
+                        const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
+                        if (selectedGrade) {
+                            const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                            actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                            actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
+                            totalWeight += subject.weight;
+                        } else { allSelected = false; }
+                    });
+                    let groupMin = 0, groupMax = 0, groupCount = 0;
+                    stage1GroupSubjects.forEach((subject, index) => {
+                        const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
+                        if (selectedGrade) {
+                            const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                            groupMin += ((gradeData.min / 100) * 5);
+                            groupMax += ((gradeData.max / 100) * 5);
+                            groupCount++;
+                        } else { allSelected = false; }
+                    });
+                    if (groupCount === stage1GroupSubjects.length) {
+                        actualMinScore += (groupMin / groupCount) * 0.26;
+                        actualMaxScore += (groupMax / groupCount) * 0.26;
+                        totalWeight += 0.26;
+                    }
+                    actualMinScore += ((70 / 100) * 5) * 0.39;
+                    actualMaxScore += ((79.99 / 100) * 5) * 0.39;
+                    totalWeight += 0.39;
+                } else { // Stages 2 and 3
+                    const subjects = currentStage === '2' ? stage2Subjects : stage3Subjects;
+                    const prefix = currentStage === '2' ? 'stage2_' : 'stage3_';
+                    subjects.forEach((subject, index) => {
+                        const selectedGrade = document.querySelector(`input[name="${prefix}subject_${index}"]:checked`);
+                        if (selectedGrade) {
+                            const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                            actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                            actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
+                            totalWeight += subject.weight;
+                        } else { allSelected = false; }
+                    });
+                }
+                
+                if (!allSelected) {
+                    alert('يرجى اختيار تقدير لجميع المواد');
+                    return;
+                }
+
+                const finalMinScore = (actualMinScore / totalWeight).toFixed(2);
+                const finalMaxScore = (actualMaxScore / totalWeight).toFixed(2);
+                const averageScore = ((parseFloat(finalMinScore) + parseFloat(finalMaxScore)) / 2).toFixed(2);
+                
+                averageLabel.textContent = "النتيجة النهائية من 5";
+                averageScoreDiv.innerHTML = `
+                    <div style="font-size: 2rem; color: ${scoreColor}; margin-bottom: 15px;">النطاق المحتمل للمعدل</div>
+                    <div style="font-size: 2.5rem; color: ${scoreColor}; margin-bottom: 20px; font-weight: 700;">
+                        ${finalMinScore} - ${finalMaxScore}
+                    </div>
+                    <div style="font-size: 1.8rem; color: ${avgColor}; border-top: 2px solid rgba(102, 126, 234, 0.2); padding-top: 15px; margin-top: 15px;">
+                        المتوسط التقريبي: <span style="font-weight: 700;">${averageScore}</span>
+                    </div>
+                `;
+            }
+
             document.getElementById('results').style.display = 'block';
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             initializeTheme();
-            
             document.querySelectorAll('input[name="stage"]').forEach(radio => {
                 radio.addEventListener('change', handleStageChange);
             });
