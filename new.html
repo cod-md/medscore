@@ -16,7 +16,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            direction: rtl;
+            transition: all 0.3s ease;
         }
 
         .container {
@@ -37,15 +37,14 @@
             position: relative;
         }
         
-        /* General style for header buttons */
         .header-btn {
             position: absolute;
             top: 20px;
             background: rgba(255, 255, 255, 0.2);
             border: none;
             border-radius: 50%;
-            width: 44px; /* Fixed width */
-            height: 44px; /* Fixed height */
+            width: 44px;
+            height: 44px;
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
@@ -63,11 +62,25 @@
         }
 
         .theme-toggle {
-            left: 20px; /* Position for theme toggle */
+            left: 20px;
         }
         
         .language-toggle {
-            right: 20px; /* Position for language toggle */
+            right: 20px;
+        }
+
+        /* LTR Specific Adjustments */
+        [dir="ltr"] .group-weight {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+        
+        [dir="ltr"] .footer-link {
+            text-align: left;
+        }
+        
+        [dir="rtl"] .footer-link {
+            text-align: right;
         }
 
 
@@ -77,348 +90,57 @@
             color: #ffffff;
         }
 
-        body.dark-mode .container {
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid #333;
-        }
+        body.dark-mode .container { background: rgba(10, 10, 10, 0.95); border: 1px solid #333; }
+        body.dark-mode .stage-selector { background: #111111; border: 1px solid #333; }
+        body.dark-mode .stage-selector h2 { color: #ffffff; }
+        body.dark-mode .stage-option label { background: #1a1a1a; border-color: #333; color: #ffffff; }
+        body.dark-mode .stage-option label:hover { background: #2a2a2a; border-color: #4facfe; }
+        body.dark-mode .subject-card { background: #111111; border: 1px solid #333; }
+        body.dark-mode .subject-name { color: #ffffff; }
+        body.dark-mode .group-subjects { background: #1a1a1a; border-color: #333; }
+        body.dark-mode .group-title { color: #ffffff; }
+        body.dark-mode .grade-option label { background: #1a1a1a; border-color: #333; color: #ffffff; }
+        body.dark-mode .grade-option label:hover { background: #2a2a2a; border-color: #4facfe; }
+        body.dark-mode .results { background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); border: 1px solid #333; }
+        body.dark-mode .average-display, body.dark-mode #average-score, body.dark-mode #average-score div { color: #ffffff !important; }
+        body.dark-mode .average-label { color: #cccccc; }
+        body.dark-mode .info-note { background-color: #2a2a00; color: #f1da7a; border-color: #5a5000; }
 
-        body.dark-mode .stage-selector {
-            background: #111111;
-            border: 1px solid #333;
-        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
+        .header p { font-size: 1.2rem; opacity: 0.9; }
+        .content { padding: 40px; }
+        .stage-selector { background: white; border-radius: 15px; padding: 30px; margin-bottom: 30px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); border: 1px solid rgba(0, 0, 0, 0.05); text-align: center; }
+        .stage-selector h2 { color: #333; margin-bottom: 20px; font-size: 1.5rem; }
+        .stage-options { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .stage-option { position: relative; }
+        .stage-option input[type="radio"] { display: none; }
+        .stage-option label { display: block; padding: 20px 40px; background: #f8f9fa; border: 3px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; font-size: 1.2rem; color: #333; }
+        .stage-option input[type="radio"]:checked + label { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border-color: #4facfe; transform: scale(1.05); }
+        .stage-option label:hover { border-color: #4facfe; background: #e3f2fd; }
+        .subject-card { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); border: 1px solid rgba(0, 0, 0, 0.05); transition: all 0.3s ease; }
+        .subject-card:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15); }
+        .subject-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .subject-name { font-size: 1.3rem; font-weight: bold; color: #333; }
+        .subject-weight { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #666; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; }
+        .grade-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 15px; }
+        .grade-option { position: relative; }
+        .grade-option input[type="radio"] { display: none; }
+        .grade-option label { display: block; padding: 12px 8px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; font-weight: 600; font-size: 0.9rem; }
+        .grade-option input[type="radio"]:checked + label { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border-color: #4facfe; transform: scale(1.05); }
+        .grade-option label:hover { border-color: #4facfe; background: #e3f2fd; }
+        .results { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 15px; padding: 30px; margin-top: 30px; text-align: center; }
+        .average-display { font-size: 3rem; font-weight: bold; color: #333; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .average-label { font-size: 1.2rem; color: #666; margin-bottom: 20px; }
+        .calculate-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px 40px; border-radius: 25px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3); }
+        .calculate-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4); }
+        .calculate-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        .subjects-section { display: none; }
+        .subjects-section.active { display: block; }
+        .group-subjects { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 2px dashed #dee2e6; }
+        .group-title { font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 15px; text-align: center; }
+        .group-weight { background: linear-gradient(135deg, #ffa726 0%, #ffcc02 100%); color: #333; padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; }
+        .info-note { background-color: #fffbe6; color: #584c03; border: 1px solid #ffeeba; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center; font-size: 0.95rem; line-height: 1.6; }
 
-        body.dark-mode .stage-selector h2 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .stage-option label {
-            background: #1a1a1a;
-            border-color: #333;
-            color: #ffffff;
-        }
-
-        body.dark-mode .stage-option label:hover {
-            background: #2a2a2a;
-            border-color: #4facfe;
-        }
-
-        body.dark-mode .subject-card {
-            background: #111111;
-            border: 1px solid #333;
-        }
-
-        body.dark-mode .subject-name {
-            color: #ffffff;
-        }
-
-        body.dark-mode .group-subjects {
-            background: #1a1a1a;
-            border-color: #333;
-        }
-
-        body.dark-mode .group-title {
-            color: #ffffff;
-        }
-
-        body.dark-mode .grade-option label {
-            background: #1a1a1a;
-            border-color: #333;
-            color: #ffffff;
-        }
-
-        body.dark-mode .grade-option label:hover {
-            background: #2a2a2a;
-            border-color: #4facfe;
-        }
-
-        body.dark-mode .results {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            border: 1px solid #333;
-        }
-
-        body.dark-mode .average-display, body.dark-mode #average-score, body.dark-mode #average-score div {
-            color: #ffffff !important;
-        }
-        
-        body.dark-mode .average-label {
-            color: #cccccc;
-        }
-        
-        body.dark-mode .info-note {
-             background-color: #2a2a00;
-             color: #f1da7a;
-             border-color: #5a5000;
-        }
-
-
-        /* AMOLED optimizations */
-        @media (prefers-color-scheme: dark) {
-            body.dark-mode {
-                background: #000000;
-            }
-            
-            body.dark-mode .container {
-                background: rgba(0, 0, 0, 0.98);
-            }
-            
-            body.dark-mode .subject-card,
-            body.dark-mode .stage-selector,
-            body.dark-mode .group-subjects,
-            body.dark-mode .results {
-                background: #000000;
-                border: 1px solid #222;
-            }
-            
-            body.dark-mode .grade-option label {
-                background: #000000;
-                border-color: #222;
-            }
-            
-            body.dark-mode .grade-option label:hover {
-                background: #111111;
-            }
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .content {
-            padding: 40px;
-        }
-
-        .stage-selector {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            text-align: center;
-        }
-
-        .stage-selector h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        .stage-options {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .stage-option {
-            position: relative;
-        }
-
-        .stage-option input[type="radio"] {
-            display: none;
-        }
-
-        .stage-option label {
-            display: block;
-            padding: 20px 40px;
-            background: #f8f9fa;
-            border: 3px solid #e9ecef;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: #333;
-        }
-
-        .stage-option input[type="radio"]:checked + label {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border-color: #4facfe;
-            transform: scale(1.05);
-        }
-
-        .stage-option label:hover {
-            border-color: #4facfe;
-            background: #e3f2fd;
-        }
-
-        .subject-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .subject-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .subject-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .subject-name {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .subject-weight {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            color: #666;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .grade-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .grade-option {
-            position: relative;
-        }
-
-        .grade-option input[type="radio"] {
-            display: none;
-        }
-
-        .grade-option label {
-            display: block;
-            padding: 12px 8px;
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .grade-option input[type="radio"]:checked + label {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border-color: #4facfe;
-            transform: scale(1.05);
-        }
-
-        .grade-option label:hover {
-            border-color: #4facfe;
-            background: #e3f2fd;
-        }
-
-        .results {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            border-radius: 15px;
-            padding: 30px;
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .average-display {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .average-label {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .calculate-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .calculate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
-        }
-
-        .calculate-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .subjects-section {
-            display: none;
-        }
-
-        .subjects-section.active {
-            display: block;
-        }
-
-        .group-subjects {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 2px dashed #dee2e6;
-        }
-
-        .group-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .group-weight {
-            background: linear-gradient(135deg, #ffa726 0%, #ffcc02 100%);
-            color: #333;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-right: 10px;
-        }
-        
-        .info-note {
-            background-color: #fffbe6;
-            color: #584c03;
-            border: 1px solid #ffeeba;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
     </style>
 </head>
 <body>
@@ -431,25 +153,25 @@
                 <span id="langIcon">EN</span>
             </button>
 
-            <h1>حساب المعدل</h1>
-            <p>نظام التقديرات من 5 درجات</p>
+            <h1 data-translate-key="mainHeader">حساب المعدل</h1>
+            <p data-translate-key="subHeader">نظام التقديرات من 5 درجات</p>
         </div>
 
         <div class="content">
             <div class="stage-selector">
-                <h2>اختر المرحلة الدراسية</h2>
+                <h2 data-translate-key="selectStage">اختر المرحلة الدراسية</h2>
                 <div class="stage-options">
                     <div class="stage-option">
                         <input type="radio" id="stage1" name="stage" value="1">
-                        <label for="stage1">المرحلة الأولى</label>
+                        <label for="stage1" data-translate-key="stage1">المرحلة الأولى</label>
                     </div>
                     <div class="stage-option">
                         <input type="radio" id="stage2" name="stage" value="2">
-                        <label for="stage2">المرحلة الثانية</label>
+                        <label for="stage2" data-translate-key="stage2">المرحلة الثانية</label>
                     </div>
                     <div class="stage-option">
                         <input type="radio" id="stage3" name="stage" value="3">
-                        <label for="stage3">المرحلة الثالثة</label>
+                        <label for="stage3" data-translate-key="stage3">المرحلة الثالثة</label>
                     </div>
                 </div>
             </div>
@@ -458,8 +180,8 @@
                 <div id="stage1-container"></div>
                 <div class="group-subjects">
                     <div class="group-title">
-                        مواد مجمعة 
-                        <span class="group-weight">الوزن الإجمالي: 0.26</span>
+                        <span data-translate-key="groupedSubjects">مواد مجمعة</span>
+                        <span class="group-weight"><span data-translate-key="totalWeight">الوزن الإجمالي</span>: 0.26</span>
                     </div>
                     <div id="group-subjects-container"></div>
                 </div>
@@ -471,70 +193,194 @@
 
             <div id="stage3-subjects" class="subjects-section">
                 <div class="info-note">
-                    <strong>ملاحظة:</strong> وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.
+                    <strong data-translate-key="note">ملاحظة:</strong>
+                    <span data-translate-key="noteDetails">وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.</span>
                 </div>
                 <div id="stage3-container"></div>
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-                <button class="calculate-btn" id="calculateBtn" onclick="calculateAverage()" disabled>احسب المعدل</button>
+                <button class="calculate-btn" id="calculateBtn" onclick="calculateAverage()" disabled data-translate-key="calculate">احسب المعدل</button>
             </div>
 
             <div class="results" id="results" style="display: none;">
                 <div class="average-display" id="average-score">0.00</div>
-                <div class="average-label">النتيجة النهائية من 5</div>
+                <div class="average-label" data-translate-key="finalResult">النتيجة النهائية من 5</div>
             </div>
         </div>
         
-        <div style="text-align: center; padding: 20px; color: #666; font-size: 1rem; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 20px;">
+        <div class="footer-link" style="padding: 20px; color: #666; font-size: 1rem; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 20px;">
              By Muhammad Saadoon | <a href="https://t.me/anemd" target="_blank" style="color: #4facfe; text-decoration: none;">@anemd</a>
         </div>
     </div>
 
     <script>
+        // --- DATA & TRANSLATIONS ---
+
+        const translations = {
+            ar: {
+                pageTitle: "حساب المعدل",
+                mainHeader: "حساب المعدل",
+                subHeader: "نظام التقديرات من 5 درجات",
+                selectStage: "اختر المرحلة الدراسية",
+                stage1: "المرحلة الأولى",
+                stage2: "المرحلة الثانية",
+                stage3: "المرحلة الثالثة",
+                groupedSubjects: "مواد مجمعة",
+                totalWeight: "الوزن الإجمالي",
+                note: "ملاحظة:",
+                noteDetails: "وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.",
+                calculate: "احسب المعدل",
+                finalResult: "النتيجة النهائية من 5",
+                weight: "الوزن",
+                potentialRange: "النطاق المحتمل للمعدل",
+                approximateAverage: "المتوسط التقريبي",
+                alertSelectStage: "يرجى اختيار المرحلة أولاً",
+                alertSelectGrades: "يرجى اختيار تقدير لجميع المواد",
+                // Subjects
+                chemistry: "الكيمياء",
+                anatomy: "التشريح",
+                biology: "الأحياء",
+                physics: "الفيزياء",
+                medTerms: "المصطلحات الطبية",
+                fundamentals: "الأساسيات",
+                humanRights: "الحقوق",
+                physiology: "الفسلجة",
+                histology: "الهستو",
+                embryology: "الامبريو",
+                computerScience: "الحاسوب",
+                baathCrimes: "جرائم حزب البعث",
+                pathology: "امراض",
+                microbiology: "جراثيم",
+                pharmacology: "ادوية",
+                parasitology: "طفيليات",
+                internalMed: "طب باطني",
+                familyMed: "طب الاسرة",
+                surgery: "جراحة",
+                // Grades
+                pass: "مقبول",
+                average: "متوسط",
+                good: "جيد",
+                veryGood: "جيد جداً",
+                excellent: "امتياز"
+            },
+            en: {
+                pageTitle: "Grade Calculator",
+                mainHeader: "Grade Calculator",
+                subHeader: "5-Point Grading System",
+                selectStage: "Select Academic Stage",
+                stage1: "Stage One",
+                stage2: "Stage Two",
+                stage3: "Stage Three",
+                groupedSubjects: "Grouped Subjects",
+                totalWeight: "Total Weight",
+                note: "Note:",
+                noteDetails: "The weight of English (2 units) has been distributed over Family Medicine and Surgery subjects. This is a personal endeavor and not an official procedure.",
+                calculate: "Calculate Average",
+                finalResult: "Final Result out of 5",
+                weight: "Weight",
+                potentialRange: "Potential Average Range",
+                approximateAverage: "Approximate Average",
+                alertSelectStage: "Please select a stage first",
+                alertSelectGrades: "Please select a grade for all subjects",
+                // Subjects
+                chemistry: "Chemistry",
+                anatomy: "Anatomy",
+                biology: "Biology",
+                physics: "Physics",
+                medTerms: "Medical Terminology",
+                fundamentals: "Fundamentals",
+                humanRights: "Human Rights",
+                physiology: "Physiology",
+                histology: "Histology",
+                embryology: "Embryology",
+                computerScience: "Computer Science",
+                baathCrimes: "Ba'ath Party Crimes",
+                pathology: "Pathology",
+                microbiology: "Microbiology",
+                pharmacology: "Pharmacology",
+                parasitology: "Parasitology",
+                internalMed: "Internal Medicine",
+                familyMed: "Family Medicine",
+                surgery: "Surgery",
+                // Grades
+                pass: "Pass",
+                average: "Average",
+                good: "Good",
+                veryGood: "Very Good",
+                excellent: "Excellent"
+            }
+        };
+
         const stage1Subjects = [
-            { name: 'الكيمياء', weight: 1.18 },
-            { name: 'التشريح', weight: 1.05 },
-            { name: 'الأحياء', weight: 0.79 },
-            { name: 'الفيزياء', weight: 0.79 }
+            { nameKey: 'chemistry', weight: 1.18 }, { nameKey: 'anatomy', weight: 1.05 },
+            { nameKey: 'biology', weight: 0.79 }, { nameKey: 'physics', weight: 0.79 }
         ];
-
         const stage1GroupSubjects = [
-            { name: 'المصطلحات الطبية', weight: 0.26/3 },
-            { name: 'الأساسيات', weight: 0.26/3 },
-            { name: 'الحقوق', weight: 0.26/3 }
+            { nameKey: 'medTerms', weight: 0.26/3 }, { nameKey: 'fundamentals', weight: 0.26/3 },
+            { nameKey: 'humanRights', weight: 0.26/3 }
         ];
-
         const stage2Subjects = [
-            { name: 'الفسلجة', weight: 1.428 },
-            { name: 'التشريح', weight: 1.19 },
-            { name: 'الكيمياء', weight: 1.19 },
-            { name: 'الهستو', weight: 0.71 },
-            { name: 'الامبريو', weight: 0.238 },
-            { name: 'الحاسوب', weight: 0.115 },
-            { name: 'جرائم حزب البعث', weight: 0.115 }
+            { nameKey: 'physiology', weight: 1.428 }, { nameKey: 'anatomy', weight: 1.19 },
+            { nameKey: 'chemistry', weight: 1.19 }, { nameKey: 'histology', weight: 0.71 },
+            { nameKey: 'embryology', weight: 0.238 }, { nameKey: 'computerScience', weight: 0.115 },
+            { nameKey: 'baathCrimes', weight: 0.115 }
         ];
-        
         const stage3Subjects = [
-            { name: 'امراض', weight: 1.222 },
-            { name: 'جراثيم', weight: 1 },
-            { name: 'ادوية', weight: 0.888 },
-            { name: 'طفيليات', weight: 0.555 },
-            { name: 'طب باطني', weight: 0.555 },
-            { name: 'طب الاسرة', weight: 0.444 },
-            { name: 'جراحة', weight: 0.333 }
+            { nameKey: 'pathology', weight: 1.222 }, { nameKey: 'microbiology', weight: 1 },
+            { nameKey: 'pharmacology', weight: 0.888 }, { nameKey: 'parasitology', weight: 0.555 },
+            { nameKey: 'internalMed', weight: 0.555 }, { nameKey: 'familyMed', weight: 0.444 },
+            { nameKey: 'surgery', weight: 0.333 }
         ];
-
         const grades = [
-            { name: 'مقبول', min: 50, max: 59.99, value: 1 },
-            { name: 'متوسط', min: 60, max: 69.99, value: 2 },
-            { name: 'جيد', min: 70, max: 79.99, value: 3 },
-            { name: 'جيد جداً', min: 80, max: 89.99, value: 4 },
-            { name: 'امتياز', min: 90, max: 100, value: 5 }
+            { nameKey: 'pass', min: 50, max: 59.99, value: 1 },
+            { nameKey: 'average', min: 60, max: 69.99, value: 2 },
+            { nameKey: 'good', min: 70, max: 79.99, value: 3 },
+            { nameKey: 'veryGood', min: 80, max: 89.99, value: 4 },
+            { nameKey: 'excellent', min: 90, max: 100, value: 5 }
         ];
 
+        // --- GLOBAL STATE ---
         let currentStage = null;
         let isDarkMode = localStorage.getItem('darkMode') === 'true';
+        let currentLang = localStorage.getItem('language') || 'ar';
+
+        // --- CORE FUNCTIONS ---
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            
+            const trans = translations[lang];
+            
+            // Set page direction and lang
+            document.documentElement.setAttribute('lang', lang);
+            document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Set page title
+            document.title = trans.pageTitle;
+
+            // Translate all elements with data-translate-key
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.getAttribute('data-translate-key');
+                if (trans[key]) {
+                    el.textContent = trans[key];
+                }
+            });
+            
+            // Update language toggle button text
+            document.getElementById('langIcon').textContent = lang === 'ar' ? 'EN' : 'AR';
+            
+            // Re-render subjects if a stage is already selected
+            if(currentStage) {
+                renderSubjectsForStage(currentStage);
+            }
+        }
+
+        function toggleLanguage() {
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+            setLanguage(newLang);
+        }
 
         function toggleTheme() {
             isDarkMode = !isDarkMode;
@@ -543,76 +389,48 @@
             localStorage.setItem('darkMode', isDarkMode);
         }
 
-        function initializeTheme() {
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');
-                document.getElementById('themeIcon').textContent = '☀️';
-            }
-        }
-        
-        // --- NEW: Language Toggle Function ---
-        function toggleLanguage() {
-            const langIcon = document.getElementById('langIcon');
-            if (langIcon.textContent === 'EN') {
-                langIcon.textContent = 'AR';
-                // Add your logic to change the page language to Arabic here
-            } else {
-                langIcon.textContent = 'EN';
-                // Add your logic to change the page language to English here
-            }
-        }
-
         function createSubjectCard(subject, index, isGroup = false, containerPrefix = '') {
+            const trans = translations[currentLang];
+            const subjectName = trans[subject.nameKey] || subject.nameKey;
+
             return `
                 <div class="subject-card">
                     <div class="subject-header">
-                        <div class="subject-name">${subject.name}</div>
-                        <div class="subject-weight">الوزن: ${subject.weight.toFixed(3)}</div>
+                        <div class="subject-name">${subjectName}</div>
+                        <div class="subject-weight">${trans.weight}: ${subject.weight.toFixed(3)}</div>
                     </div>
                     <div class="grade-selector">
-                        ${grades.map(grade => `
+                        ${grades.map(grade => {
+                            const gradeName = trans[grade.nameKey] || grade.nameKey;
+                            const id = `${containerPrefix}${subject.nameKey}_${grade.nameKey}`;
+                            return `
                             <div class="grade-option">
-                                <input type="radio" id="${containerPrefix}${subject.name.replace(/\s+/g, '')}_${grade.name}" name="${containerPrefix}subject_${index}" value="${grade.value}" data-grade="${grade.name}" data-min="${grade.min}" data-max="${grade.max}">
-                                <label for="${containerPrefix}${subject.name.replace(/\s+/g, '')}_${grade.name}">${grade.name}</label>
+                                <input type="radio" id="${id}" name="${containerPrefix}subject_${index}" value="${grade.value}" data-grade-key="${grade.nameKey}" data-min="${grade.min}" data-max="${grade.max}">
+                                <label for="${id}">${gradeName}</label>
                             </div>
-                        `).join('')}
+                        `}).join('')}
                     </div>
                 </div>
             `;
         }
-
-        function initializeStage1() {
-            const container = document.getElementById('stage1-container');
-            const groupContainer = document.getElementById('group-subjects-container');
-            
-            container.innerHTML = '';
-            groupContainer.innerHTML = '';
-            
-            stage1Subjects.forEach((subject, index) => {
-                container.innerHTML += createSubjectCard(subject, index, false, 'stage1_');
-            });
-            
-            stage1GroupSubjects.forEach((subject, index) => {
-                groupContainer.innerHTML += createSubjectCard(subject, index, true, 'group_');
-            });
-        }
-
-        function initializeStage2() {
-            const container = document.getElementById('stage2-container');
-            container.innerHTML = '';
-            
-            stage2Subjects.forEach((subject, index) => {
-                container.innerHTML += createSubjectCard(subject, index, false, 'stage2_');
-            });
-        }
         
-        function initializeStage3() {
-            const container = document.getElementById('stage3-container');
-            container.innerHTML = '';
-            
-            stage3Subjects.forEach((subject, index) => {
-                container.innerHTML += createSubjectCard(subject, index, false, 'stage3_');
-            });
+        function renderSubjectsForStage(stage) {
+            document.querySelectorAll('.subjects-section').forEach(s => s.classList.remove('active'));
+            if(stage === '1') {
+                const container = document.getElementById('stage1-container');
+                const groupContainer = document.getElementById('group-subjects-container');
+                container.innerHTML = stage1Subjects.map((s, i) => createSubjectCard(s, i, false, 'stage1_')).join('');
+                groupContainer.innerHTML = stage1GroupSubjects.map((s, i) => createSubjectCard(s, i, true, 'group_')).join('');
+                document.getElementById('stage1-subjects').classList.add('active');
+            } else if (stage === '2') {
+                const container = document.getElementById('stage2-container');
+                container.innerHTML = stage2Subjects.map((s, i) => createSubjectCard(s, i, false, 'stage2_')).join('');
+                document.getElementById('stage2-subjects').classList.add('active');
+            } else if (stage === '3') {
+                const container = document.getElementById('stage3-container');
+                container.innerHTML = stage3Subjects.map((s, i) => createSubjectCard(s, i, false, 'stage3_')).join('');
+                document.getElementById('stage3-subjects').classList.add('active');
+            }
         }
 
         function handleStageChange() {
@@ -620,21 +438,7 @@
             if (!selectedStage) return;
             
             currentStage = selectedStage.value;
-            
-            document.querySelectorAll('.subjects-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            if (currentStage === '1') {
-                document.getElementById('stage1-subjects').classList.add('active');
-                initializeStage1();
-            } else if (currentStage === '2') {
-                document.getElementById('stage2-subjects').classList.add('active');
-                initializeStage2();
-            } else if (currentStage === '3') {
-                document.getElementById('stage3-subjects').classList.add('active');
-                initializeStage3();
-            }
+            renderSubjectsForStage(currentStage);
             
             document.getElementById('calculateBtn').disabled = false;
             document.getElementById('results').style.display = 'none';
@@ -642,7 +446,7 @@
 
         function calculateAverage() {
             if (!currentStage) {
-                alert('يرجى اختيار المرحلة أولاً');
+                alert(translations[currentLang].alertSelectStage);
                 return;
             }
 
@@ -650,127 +454,71 @@
             let totalWeight = 0;
             let allSelected = true;
 
+            let subjects, prefix;
             if (currentStage === '1') {
                 stage1Subjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
                     if (selectedGrade) {
                         totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
                         totalWeight += subject.weight;
-                    } else {
-                        allSelected = false;
-                    }
+                    } else { allSelected = false; }
                 });
-
-                let groupWeightedScore = 0;
-                let groupCount = 0;
+                let groupWeightedScore = 0, groupCount = 0;
                 stage1GroupSubjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
                     if (selectedGrade) {
                         groupWeightedScore += parseInt(selectedGrade.value);
                         groupCount++;
-                    } else {
-                        allSelected = false;
-                    }
+                    } else { allSelected = false; }
                 });
-
                 if (groupCount === stage1GroupSubjects.length) {
-                    const avgGroupGrade = groupWeightedScore / groupCount;
-                    totalWeightedScore += avgGroupGrade * 0.26;
+                    totalWeightedScore += (groupWeightedScore / groupCount) * 0.26;
                     totalWeight += 0.26;
                 }
-
+                totalWeightedScore += 3 * 0.39; // Fixed value for English
                 totalWeight += 0.39;
-                totalWeightedScore += 3 * 0.39; 
-            } else if (currentStage === '2') {
-                stage2Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage2_subject_${index}"]:checked`);
+            } else {
+                if(currentStage === '2') { subjects = stage2Subjects; prefix = 'stage2_'; }
+                if(currentStage === '3') { subjects = stage3Subjects; prefix = 'stage3_'; }
+                subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="${prefix}subject_${index}"]:checked`);
                     if (selectedGrade) {
                         totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
                         totalWeight += subject.weight;
-                    } else {
-                        allSelected = false;
-                    }
-                });
-            } else if (currentStage === '3') {
-                stage3Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage3_subject_${index}"]:checked`);
-                    if (selectedGrade) {
-                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
-                        totalWeight += subject.weight;
-                    } else {
-                        allSelected = false;
-                    }
+                    } else { allSelected = false; }
                 });
             }
 
             if (!allSelected) {
-                alert('يرجى اختيار تقدير لجميع المواد');
+                alert(translations[currentLang].alertSelectGrades);
                 return;
             }
-
-            let actualMinScore = 0;
-            let actualMaxScore = 0;
             
-            if (currentStage === '1') {
-                stage1Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
-                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                });
-
-                let groupMin = 0, groupMax = 0;
-                stage1GroupSubjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
-                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                    groupMin += ((gradeData.min / 100) * 5);
-                    groupMax += ((gradeData.max / 100) * 5);
-                });
-                actualMinScore += (groupMin / stage1GroupSubjects.length) * 0.26;
-                actualMaxScore += (groupMax / stage1GroupSubjects.length) * 0.26;
-
-                actualMinScore += ((70 / 100) * 5) * 0.39;
-                actualMaxScore += ((79.99 / 100) * 5) * 0.39;
-            } else if (currentStage === '2') {
-                stage2Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage2_subject_${index}"]:checked`);
-                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                });
-            } else if (currentStage === '3') {
-                 stage3Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage3_subject_${index}"]:checked`);
-                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                });
-            }
-            
-            const finalMinScore = (actualMinScore / totalWeight).toFixed(2);
-            const finalMaxScore = (actualMaxScore / totalWeight).toFixed(2);
-            const averageScore = ((parseFloat(finalMinScore) + parseFloat(finalMaxScore)) / 2).toFixed(2);
-            
-            const scoreColor = isDarkMode ? '#4facfe' : '#333';
-            const avgColor = isDarkMode ? '#667eea' : '#667eea';
-
+            const trans = translations[currentLang];
+            const averageScore = (totalWeightedScore / totalWeight).toFixed(2);
             document.getElementById('average-score').innerHTML = `
-                <div style="font-size: 2rem; color: ${scoreColor}; margin-bottom: 15px;">النطاق المحتمل للمعدل</div>
-                <div style="font-size: 2.5rem; color: ${scoreColor}; margin-bottom: 20px; font-weight: 700;">
-                    ${finalMinScore} - ${finalMaxScore}
-                </div>
-                <div style="font-size: 1.8rem; color: ${avgColor}; border-top: 2px solid rgba(102, 126, 234, 0.2); padding-top: 15px; margin-top: 15px;">
-                    المتوسط التقريبي: <span style="font-weight: 700;">${averageScore}</span>
-                </div>
+                <div style="font-size: 2rem; margin-bottom: 15px;">${trans.approximateAverage}</div>
+                <div style="font-size: 3.5rem; font-weight: 700;">${averageScore}</div>
             `;
             
             document.getElementById('results').style.display = 'block';
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         }
 
+
+        // --- INITIALIZATION ---
+
         document.addEventListener('DOMContentLoaded', function() {
-            initializeTheme();
+            // Initialize Theme
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
             
+            // Initialize Language
+            setLanguage(currentLang);
+            
+            // Add Event Listeners
             document.querySelectorAll('input[name="stage"]').forEach(radio => {
                 radio.addEventListener('change', handleStageChange);
             });
