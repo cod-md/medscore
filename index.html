@@ -486,7 +486,8 @@
             { name: 'الكيمياء', weight: 1.18 },
             { name: 'التشريح', weight: 1.05 },
             { name: 'الأحياء', weight: 0.79 },
-            { name: 'الفيزياء', weight: 0.79 }
+            { name: 'الفيزياء', weight: 0.79 },
+            { name: 'الحاسوب', weight: 0.394 }
         ];
 
         const stage1GroupSubjects = [
@@ -697,9 +698,6 @@
                         actualMaxScore += (groupMax / groupCount) * 0.26;
                         totalWeight += 0.26;
                     }
-                    actualMinScore += ((70 / 100) * 5) * 0.39;
-                    actualMaxScore += ((79.99 / 100) * 5) * 0.39;
-                    totalWeight += 0.39;
                 } else { // Stages 2 and 3
                     const subjects = currentStage === '2' ? stage2Subjects : stage3Subjects;
                     const prefix = currentStage === '2' ? 'stage2_' : 'stage3_';
