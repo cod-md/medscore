@@ -433,6 +433,10 @@
                         <input type="radio" id="stage3" name="stage" value="3">
                         <label for="stage3">المرحلة الثالثة</label>
                     </div>
+                    <div class="stage-option">
+                        <input type="radio" id="stage4" name="stage" value="4">
+                        <label for="stage4">المرحلة الرابعة</label>
+                    </div>
                 </div>
             </div>
 
@@ -456,6 +460,10 @@
                     <strong>ملاحظة:</strong> وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.
                 </div>
                 <div id="stage3-container"></div>
+            </div>
+
+            <div id="stage4-subjects" class="subjects-section">
+                <div id="stage4-container"></div>
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
@@ -497,7 +505,6 @@
             { name: 'جرائم حزب البعث', weight: 0.115 }
         ];
         
-        // تم تحديث ترتيب المواد هنا
         const stage3Subjects = [
             { name: 'امراض', weight: 1.222 },
             { name: 'جراثيم', weight: 1 },
@@ -506,6 +513,15 @@
             { name: 'طب باطني', weight: 0.555 },
             { name: 'طب الاسرة', weight: 0.444 },
             { name: 'جراحة', weight: 0.333 }
+        ];
+
+        const stage4Subjects = [
+            { name: 'باطنية', weight: 5.15 },
+            { name: 'طب مجتمع', weight: 4.53 },
+            { name: 'جراحة', weight: 4.32 },
+            { name: 'نسائية', weight: 2.68 },
+            { name: 'طب عدلي', weight: 2.47 },
+            { name: 'اطفال', weight: 0.82 }
         ];
 
         const grades = [
@@ -534,11 +550,12 @@
         }
 
         function createSubjectCard(subject, index, isGroup = false, containerPrefix = '') {
+            const weightDisplay = subject.weight % 1 === 0 ? subject.weight : subject.weight.toFixed(3);
             return `
                 <div class="subject-card">
                     <div class="subject-header">
                         <div class="subject-name">${subject.name}</div>
-                        <div class="subject-weight">الوزن: ${subject.weight.toFixed(3)}</div>
+                        <div class="subject-weight">الوزن: ${weightDisplay}</div>
                     </div>
                     <div class="grade-selector">
                         ${grades.map(grade => `
@@ -586,6 +603,15 @@
             });
         }
 
+        function initializeStage4() {
+            const container = document.getElementById('stage4-container');
+            container.innerHTML = '';
+            
+            stage4Subjects.forEach((subject, index) => {
+                container.innerHTML += createSubjectCard(subject, index, false, 'stage4_');
+            });
+        }
+
         function handleStageChange() {
             const selectedStage = document.querySelector('input[name="stage"]:checked');
             if (!selectedStage) return;
@@ -605,6 +631,9 @@
             } else if (currentStage === '3') {
                 document.getElementById('stage3-subjects').classList.add('active');
                 initializeStage3();
+            } else if (currentStage === '4') {
+                document.getElementById('stage4-subjects').classList.add('active');
+                initializeStage4();
             }
             
             document.getElementById('calculateBtn').disabled = false;
@@ -620,8 +649,11 @@
             let totalWeightedScore = 0;
             let totalWeight = 0;
             let allSelected = true;
+            let subjects;
+            let prefix;
 
             if (currentStage === '1') {
+                // Handle stage 1 separately due to grouped subjects
                 stage1Subjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
                     if (selectedGrade) {
@@ -652,19 +684,21 @@
 
                 totalWeight += 0.39;
                 totalWeightedScore += 3 * 0.39; 
-            } else if (currentStage === '2') {
-                stage2Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage2_subject_${index}"]:checked`);
-                    if (selectedGrade) {
-                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
-                        totalWeight += subject.weight;
-                    } else {
-                        allSelected = false;
-                    }
-                });
-            } else if (currentStage === '3') {
-                stage3Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage3_subject_${index}"]:checked`);
+
+            } else {
+                if (currentStage === '2') {
+                    subjects = stage2Subjects;
+                    prefix = 'stage2_';
+                } else if (currentStage === '3') {
+                    subjects = stage3Subjects;
+                    prefix = 'stage3_';
+                } else if (currentStage === '4') {
+                    subjects = stage4Subjects;
+                    prefix = 'stage4_';
+                }
+
+                subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="${prefix}subject_${index}"]:checked`);
                     if (selectedGrade) {
                         totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
                         totalWeight += subject.weight;
@@ -683,6 +717,7 @@
             let actualMaxScore = 0;
             
             if (currentStage === '1') {
+                 // Handle stage 1 range calculation
                 stage1Subjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
                     const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
@@ -702,16 +737,10 @@
 
                 actualMinScore += ((70 / 100) * 5) * 0.39;
                 actualMaxScore += ((79.99 / 100) * 5) * 0.39;
-            } else if (currentStage === '2') {
-                stage2Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage2_subject_${index}"]:checked`);
-                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                });
-            } else if (currentStage === '3') {
-                 stage3Subjects.forEach((subject, index) => {
-                    const selectedGrade = document.querySelector(`input[name="stage3_subject_${index}"]:checked`);
+            } else {
+                // Handle range calculation for other stages
+                 subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="${prefix}subject_${index}"]:checked`);
                     const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
                     actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
                     actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
