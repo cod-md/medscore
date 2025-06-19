@@ -75,12 +75,13 @@
             transform: scale(1.1);
         }
         
+        /* Adjusted positioning for fixed buttons */
         .theme-toggle {
-            inset-inline-start: 20px;
+            inset-inline-end: 20px; /* Fixed to right */
         }
         
         .language-toggle {
-            inset-inline-end: 20px;
+            inset-inline-start: 20px; /* Fixed to left */
         }
 
         /* Dark mode styles */
@@ -147,7 +148,26 @@
         .subjects-section.active { display: block; }
         .group-subjects { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 2px dashed #dee2e6; }
         .group-title { font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 15px; text-align: center; }
-        .group-weight { background: linear-gradient(135deg, #ffa726 0%, #ffcc02 100%); color: #333; padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: 600; margin-inline-start: 10px; }
+        
+        /* Adjusted styling for group-weight */
+        .group-weight { 
+            background: linear-gradient(135deg, #ffa726 0%, #ffcc02 100%); 
+            color: #333; 
+            padding: 5px 12px; 
+            border-radius: 15px; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            margin-top: 10px; /* Add margin to separate from title */
+            display: block; /* Make it a block element to go to a new line */
+            width: fit-content; /* Adjust width to content */
+            margin-inline: auto; /* Center the block */
+        }
+
+        /* Adjust subject-weight inside grouped subjects */
+        #group-subjects-container .subject-weight {
+            font-size: 0.75rem; /* Smaller font size for grouped subject weights */
+            padding: 6px 10px;
+        }
         
         .info-note { background-color: #fffbe6; color: #584c03; border: 1px solid #ffeeba; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center; font-size: 0.95rem; line-height: 1.6; }
 
@@ -162,11 +182,11 @@
     </style>
 </head>
 <body>
-    <button class="header-btn theme-toggle" id="themeToggle" onclick="toggleTheme()">
-        <span id="themeIcon">🌙</span>
-    </button>
     <button class="header-btn language-toggle" id="langToggle" onclick="toggleLanguage()">
         <span id="langIcon">EN</span>
+    </button>
+    <button class="header-btn theme-toggle" id="themeToggle" onclick="toggleTheme()">
+        <span id="themeIcon">🌙</span>
     </button>
     
     <div class="container">
@@ -242,10 +262,10 @@
             }
         };
 
-        const stage1Subjects = [ { nameKey: 'Chemistry', weight: 1.18 }, { nameKey: 'Anatomy', weight: 1.05 }, { nameKey: 'Biology', weight: 0.79 }, { nameKey: 'Physics', weight: 0.79 } ];
-        const stage1GroupSubjects = [ { nameKey: 'Terminology', weight: 0.26/3 }, { nameKey: 'Fundamentals', weight: 0.26/3 }, { nameKey: 'HumanRights', weight: 0.26/3 } ];
-        const stage2Subjects = [ { nameKey: 'Physiology', weight: 1.428 }, { nameKey: 'Anatomy', weight: 1.19 }, { nameKey: 'Biochemistry', weight: 1.19 }, { nameKey: 'Histology', weight: 0.71 }, { nameKey: 'Embryology', weight: 0.238 }, { nameKey: 'ComputerScience', weight: 0.115 }, { nameKey: 'BaathCrimes', weight: 0.115 } ];
-        const stage3Subjects = [ { nameKey: 'Pathology', weight: 1.222 }, { nameKey: 'Microbiology', weight: 1 }, { nameKey: 'Pharmacology', weight: 0.888 }, { nameKey: 'Parasitology', weight: 0.555 }, { nameKey: 'InternalMed', weight: 0.555 }, { nameKey: 'FamilyMed', weight: 0.444 }, { nameKey: 'Surgery', weight: 0.333 } ];
+        const stage1Subjects = [ { nameKey: 'chemistry', weight: 1.18 }, { nameKey: 'anatomy', weight: 1.05 }, { nameKey: 'biology', weight: 0.79 }, { nameKey: 'physics', weight: 0.79 } ];
+        const stage1GroupSubjects = [ { nameKey: 'medTerms', weight: 0.26/3 }, { nameKey: 'fundamentals', weight: 0.26/3 }, { nameKey: 'humanRights', weight: 0.26/3 } ];
+        const stage2Subjects = [ { nameKey: 'physiology', weight: 1.428 }, { nameKey: 'anatomy', weight: 1.19 }, { nameKey: 'biochemistry', weight: 1.19 }, { nameKey: 'histology', weight: 0.71 }, { nameKey: 'embryology', weight: 0.238 }, { nameKey: 'computerScience', weight: 0.115 }, { nameKey: 'baathCrimes', weight: 0.115 } ];
+        const stage3Subjects = [ { nameKey: 'pathology', weight: 1.222 }, { nameKey: 'microbiology', weight: 1 }, { nameKey: 'pharmacology', weight: 0.888 }, { nameKey: 'parasitology', weight: 0.555 }, { nameKey: 'internalMed', weight: 0.555 }, { nameKey: 'familyMed', weight: 0.444 }, { nameKey: 'surgery', weight: 0.333 } ];
         const grades = [ { nameKey: 'pass', min: 50, max: 59.99, value: 1 }, { nameKey: 'average', min: 60, max: 69.99, value: 2 }, { nameKey: 'good', min: 70, max: 79.99, value: 3 }, { nameKey: 'veryGood', min: 80, max: 89.99, value: 4 }, { nameKey: 'excellent', min: 90, max: 100, value: 5 } ];
 
         let currentStage = null;
@@ -383,8 +403,8 @@
                     totalWeightedScore += (groupWeightedScore / groupCount) * 0.26;
                     totalWeight += 0.26;
                 }
-                totalWeightedScore += 3 * 0.39;
-                totalWeight += 0.39;
+                totalWeightedScore += 3 * 0.39; // Assuming a fixed value for the English subject for Stage 1.
+                totalWeight += 0.39; // Assuming a fixed weight for the English subject for Stage 1.
             } else {
                 if(currentStage === '2') { subjects = stage2Subjects; prefix = 'stage2_'; }
                 if(currentStage === '3') { subjects = stage3Subjects; prefix = 'stage3_'; }
