@@ -17,11 +17,6 @@
             min-height: 100vh;
             padding: 20px;
             direction: rtl;
-            transition: all 0.3s ease;
-        }
-
-        body[dir="ltr"] {
-            direction: ltr;
         }
 
         .container {
@@ -41,52 +36,40 @@
             color: white;
             position: relative;
         }
-
-        .header-controls {
+        
+        /* General style for header buttons */
+        .header-btn {
             position: absolute;
             top: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        body[dir="rtl"] .header-controls {
-            left: 20px;
-        }
-
-        body[dir="ltr"] .header-controls {
-            right: 20px;
-        }
-
-        .theme-toggle, .lang-toggle {
             background: rgba(255, 255, 255, 0.2);
             border: none;
             border-radius: 50%;
-            padding: 12px;
+            width: 44px; /* Fixed width */
+            height: 44px; /* Fixed height */
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             color: white;
             font-size: 1.2rem;
-            width: 48px;
-            height: 48px;
             display: flex;
-            align-items: center;
             justify-content: center;
-        }
-
-        .lang-toggle {
-            border-radius: 25px;
-            padding: 8px 16px;
-            font-size: 0.9rem;
+            align-items: center;
             font-weight: bold;
-            width: auto;
-            height: auto;
         }
 
-        .theme-toggle:hover, .lang-toggle:hover {
+        .header-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
+
+        .theme-toggle {
+            left: 20px; /* Position for theme toggle */
+        }
+        
+        .language-toggle {
+            right: 20px; /* Position for language toggle */
+        }
+
 
         /* Dark mode styles */
         body.dark-mode {
@@ -166,6 +149,7 @@
              color: #f1da7a;
              border-color: #5a5000;
         }
+
 
         /* AMOLED optimizations */
         @media (prefers-color-scheme: dark) {
@@ -421,14 +405,7 @@
             border-radius: 15px;
             font-size: 0.8rem;
             font-weight: 600;
-        }
-
-        body[dir="rtl"] .group-weight {
             margin-right: 10px;
-        }
-
-        body[dir="ltr"] .group-weight {
-            margin-left: 10px;
         }
         
         .info-note {
@@ -447,33 +424,32 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="header-controls">
-                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
-                    <span id="themeIcon">🌙</span>
-                </button>
-                <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">
-                    <span id="langText">EN</span>
-                </button>
-            </div>
-            <h1 id="mainTitle">حساب المعدل</h1>
-            <p id="subtitle">نظام التقديرات من 5 درجات</p>
+            <button class="header-btn theme-toggle" id="themeToggle" onclick="toggleTheme()">
+                <span id="themeIcon">🌙</span>
+            </button>
+            <button class="header-btn language-toggle" id="langToggle" onclick="toggleLanguage()">
+                <span id="langIcon">EN</span>
+            </button>
+
+            <h1>حساب المعدل</h1>
+            <p>نظام التقديرات من 5 درجات</p>
         </div>
 
         <div class="content">
             <div class="stage-selector">
-                <h2 id="stageTitle">اختر المرحلة الدراسية</h2>
+                <h2>اختر المرحلة الدراسية</h2>
                 <div class="stage-options">
                     <div class="stage-option">
                         <input type="radio" id="stage1" name="stage" value="1">
-                        <label for="stage1" id="stage1Label">المرحلة الأولى</label>
+                        <label for="stage1">المرحلة الأولى</label>
                     </div>
                     <div class="stage-option">
                         <input type="radio" id="stage2" name="stage" value="2">
-                        <label for="stage2" id="stage2Label">المرحلة الثانية</label>
+                        <label for="stage2">المرحلة الثانية</label>
                     </div>
                     <div class="stage-option">
                         <input type="radio" id="stage3" name="stage" value="3">
-                        <label for="stage3" id="stage3Label">المرحلة الثالثة</label>
+                        <label for="stage3">المرحلة الثالثة</label>
                     </div>
                 </div>
             </div>
@@ -482,8 +458,8 @@
                 <div id="stage1-container"></div>
                 <div class="group-subjects">
                     <div class="group-title">
-                        <span id="groupTitle">مواد مجمعة</span>
-                        <span class="group-weight" id="groupWeight">الوزن الإجمالي: 0.26</span>
+                        مواد مجمعة 
+                        <span class="group-weight">الوزن الإجمالي: 0.26</span>
                     </div>
                     <div id="group-subjects-container"></div>
                 </div>
@@ -495,7 +471,7 @@
 
             <div id="stage3-subjects" class="subjects-section">
                 <div class="info-note">
-                    <strong id="noteStrong">ملاحظة:</strong> <span id="noteText">وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.</span>
+                    <strong>ملاحظة:</strong> وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.
                 </div>
                 <div id="stage3-container"></div>
             </div>
@@ -506,7 +482,7 @@
 
             <div class="results" id="results" style="display: none;">
                 <div class="average-display" id="average-score">0.00</div>
-                <div class="average-label" id="average-label">النتيجة النهائية من 5</div>
+                <div class="average-label">النتيجة النهائية من 5</div>
             </div>
         </div>
         
@@ -516,171 +492,49 @@
     </div>
 
     <script>
-        // Language data
-        const translations = {
-            ar: {
-                mainTitle: 'حساب المعدل',
-                subtitle: 'نظام التقديرات من 5 درجات',
-                stageTitle: 'اختر المرحلة الدراسية',
-                stage1Label: 'المرحلة الأولى',
-                stage2Label: 'المرحلة الثانية',
-                stage3Label: 'المرحلة الثالثة',
-                groupTitle: 'مواد مجمعة',
-                groupWeight: 'الوزن الإجمالي: 0.26',
-                noteStrong: 'ملاحظة:',
-                noteText: 'وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.',
-                calculateBtn: 'احسب المعدل',
-                averageLabel: 'النتيجة النهائية من 5',
-                weight: 'الوزن',
-                langText: 'EN',
-                subjects: {
-                    stage1: [
-                        { name: 'الكيمياء', weight: 1.18 },
-                        { name: 'التشريح', weight: 1.05 },
-                        { name: 'الأحياء', weight: 0.79 },
-                        { name: 'الفيزياء', weight: 0.79 }
-                    ],
-                    stage1Group: [
-                        { name: 'المصطلحات الطبية', weight: 0.26/3 },
-                        { name: 'الأساسيات', weight: 0.26/3 },
-                        { name: 'الحقوق', weight: 0.26/3 }
-                    ],
-                    stage2: [
-                        { name: 'الفسلجة', weight: 1.428 },
-                        { name: 'التشريح', weight: 1.19 },
-                        { name: 'الكيمياء', weight: 1.19 },
-                        { name: 'الهستو', weight: 0.71 },
-                        { name: 'الامبريو', weight: 0.238 },
-                        { name: 'الحاسوب', weight: 0.115 },
-                        { name: 'جرائم حزب البعث', weight: 0.115 }
-                    ],
-                    stage3: [
-                        { name: 'امراض', weight: 1.222 },
-                        { name: 'جراثيم', weight: 1 },
-                        { name: 'ادوية', weight: 0.888 },
-                        { name: 'طفيليات', weight: 0.555 },
-                        { name: 'طب باطني', weight: 0.555 },
-                        { name: 'طب الاسرة', weight: 0.444 },
-                        { name: 'جراحة', weight: 0.333 }
-                    ]
-                },
-                grades: [
-                    { name: 'مقبول', min: 50, max: 59.99, value: 1 },
-                    { name: 'متوسط', min: 60, max: 69.99, value: 2 },
-                    { name: 'جيد', min: 70, max: 79.99, value: 3 },
-                    { name: 'جيد جداً', min: 80, max: 89.99, value: 4 },
-                    { name: 'امتياز', min: 90, max: 100, value: 5 }
-                ],
-                alerts: {
-                    selectStage: 'يرجى اختيار المرحلة أولاً',
-                    selectAllGrades: 'يرجى اختيار تقدير لجميع المواد'
-                },
-                results: {
-                    rangeTitle: 'النطاق المحتمل للمعدل',
-                    averageTitle: 'المتوسط التقريبي:'
-                }
-            },
-            en: {
-                mainTitle: 'GPA Calculator',
-                subtitle: '5-Point Grading System',
-                stageTitle: 'Select Academic Stage',
-                stage1Label: 'First Stage',
-                stage2Label: 'Second Stage',
-                stage3Label: 'Third Stage',
-                groupTitle: 'Grouped Subjects',
-                groupWeight: 'Total Weight: 0.26',
-                noteStrong: 'Note:',
-                noteText: 'English weight (2 units) has been distributed between Family Medicine and Surgery. This is a personal interpretation and not an official procedure.',
-                calculateBtn: 'Calculate Average',
-                averageLabel: 'Final Result out of 5',
-                weight: 'Weight',
-                langText: 'ع',
-                subjects: {
-                    stage1: [
-                        { name: 'Chemistry', weight: 1.18 },
-                        { name: 'Anatomy', weight: 1.05 },
-                        { name: 'Biology', weight: 0.79 },
-                        { name: 'Physics', weight: 0.79 }
-                    ],
-                    stage1Group: [
-                        { name: 'Medical Terms', weight: 0.26/3 },
-                        { name: 'Fundamentals', weight: 0.26/3 },
-                        { name: 'Rights', weight: 0.26/3 }
-                    ],
-                    stage2: [
-                        { name: 'Physiology', weight: 1.428 },
-                        { name: 'Anatomy', weight: 1.19 },
-                        { name: 'Chemistry', weight: 1.19 },
-                        { name: 'Histology', weight: 0.71 },
-                        { name: 'Embryology', weight: 0.238 },
-                        { name: 'Computer', weight: 0.115 },
-                        { name: 'Ba\'ath Party Crimes', weight: 0.115 }
-                    ],
-                    stage3: [
-                        { name: 'Pathology', weight: 1.222 },
-                        { name: 'Microbiology', weight: 1 },
-                        { name: 'Pharmacology', weight: 0.888 },
-                        { name: 'Parasitology', weight: 0.555 },
-                        { name: 'Internal Medicine', weight: 0.555 },
-                        { name: 'Family Medicine', weight: 0.444 },
-                        { name: 'Surgery', weight: 0.333 }
-                    ]
-                },
-                grades: [
-                    { name: 'Pass', min: 50, max: 59.99, value: 1 },
-                    { name: 'Average', min: 60, max: 69.99, value: 2 },
-                    { name: 'Good', min: 70, max: 79.99, value: 3 },
-                    { name: 'Very Good', min: 80, max: 89.99, value: 4 },
-                    { name: 'Excellent', min: 90, max: 100, value: 5 }
-                ],
-                alerts: {
-                    selectStage: 'Please select a stage first',
-                    selectAllGrades: 'Please select a grade for all subjects'
-                },
-                results: {
-                    rangeTitle: 'Possible GPA Range',
-                    averageTitle: 'Approximate Average:'
-                }
-            }
-        };
+        const stage1Subjects = [
+            { name: 'الكيمياء', weight: 1.18 },
+            { name: 'التشريح', weight: 1.05 },
+            { name: 'الأحياء', weight: 0.79 },
+            { name: 'الفيزياء', weight: 0.79 }
+        ];
 
-        let currentLang = localStorage.getItem('language') || 'ar';
+        const stage1GroupSubjects = [
+            { name: 'المصطلحات الطبية', weight: 0.26/3 },
+            { name: 'الأساسيات', weight: 0.26/3 },
+            { name: 'الحقوق', weight: 0.26/3 }
+        ];
+
+        const stage2Subjects = [
+            { name: 'الفسلجة', weight: 1.428 },
+            { name: 'التشريح', weight: 1.19 },
+            { name: 'الكيمياء', weight: 1.19 },
+            { name: 'الهستو', weight: 0.71 },
+            { name: 'الامبريو', weight: 0.238 },
+            { name: 'الحاسوب', weight: 0.115 },
+            { name: 'جرائم حزب البعث', weight: 0.115 }
+        ];
+        
+        const stage3Subjects = [
+            { name: 'امراض', weight: 1.222 },
+            { name: 'جراثيم', weight: 1 },
+            { name: 'ادوية', weight: 0.888 },
+            { name: 'طفيليات', weight: 0.555 },
+            { name: 'طب باطني', weight: 0.555 },
+            { name: 'طب الاسرة', weight: 0.444 },
+            { name: 'جراحة', weight: 0.333 }
+        ];
+
+        const grades = [
+            { name: 'مقبول', min: 50, max: 59.99, value: 1 },
+            { name: 'متوسط', min: 60, max: 69.99, value: 2 },
+            { name: 'جيد', min: 70, max: 79.99, value: 3 },
+            { name: 'جيد جداً', min: 80, max: 89.99, value: 4 },
+            { name: 'امتياز', min: 90, max: 100, value: 5 }
+        ];
+
         let currentStage = null;
         let isDarkMode = localStorage.getItem('darkMode') === 'true';
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            localStorage.setItem('language', currentLang);
-            updateLanguage();
-            if (currentStage) {
-                reinitializeCurrentStage();
-            }
-        }
-
-        function updateLanguage() {
-            const lang = translations[currentLang];
-            const html = document.documentElement;
-            const body = document.body;
-            
-            // Update direction and language
-            html.lang = currentLang;
-            body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            
-            // Update text content
-            document.getElementById('mainTitle').textContent = lang.mainTitle;
-            document.getElementById('subtitle').textContent = lang.subtitle;
-            document.getElementById('stageTitle').textContent = lang.stageTitle;
-            document.getElementById('stage1Label').textContent = lang.stage1Label;
-            document.getElementById('stage2Label').textContent = lang.stage2Label;
-            document.getElementById('stage3Label').textContent = lang.stage3Label;
-            document.getElementById('groupTitle').textContent = lang.groupTitle;
-            document.getElementById('groupWeight').textContent = lang.groupWeight;
-            document.getElementById('noteStrong').textContent = lang.noteStrong;
-            document.getElementById('noteText').textContent = lang.noteText;
-            document.getElementById('calculateBtn').textContent = lang.calculateBtn;
-            document.getElementById('average-label').textContent = lang.averageLabel;
-            document.getElementById('langText').textContent = lang.langText;
-        }
 
         function toggleTheme() {
             isDarkMode = !isDarkMode;
@@ -695,17 +549,28 @@
                 document.getElementById('themeIcon').textContent = '☀️';
             }
         }
+        
+        // --- NEW: Language Toggle Function ---
+        function toggleLanguage() {
+            const langIcon = document.getElementById('langIcon');
+            if (langIcon.textContent === 'EN') {
+                langIcon.textContent = 'AR';
+                // Add your logic to change the page language to Arabic here
+            } else {
+                langIcon.textContent = 'EN';
+                // Add your logic to change the page language to English here
+            }
+        }
 
         function createSubjectCard(subject, index, isGroup = false, containerPrefix = '') {
-            const lang = translations[currentLang];
             return `
                 <div class="subject-card">
                     <div class="subject-header">
                         <div class="subject-name">${subject.name}</div>
-                        <div class="subject-weight">${lang.weight}: ${subject.weight.toFixed(3)}</div>
+                        <div class="subject-weight">الوزن: ${subject.weight.toFixed(3)}</div>
                     </div>
                     <div class="grade-selector">
-                        ${lang.grades.map(grade => `
+                        ${grades.map(grade => `
                             <div class="grade-option">
                                 <input type="radio" id="${containerPrefix}${subject.name.replace(/\s+/g, '')}_${grade.name}" name="${containerPrefix}subject_${index}" value="${grade.value}" data-grade="${grade.name}" data-min="${grade.min}" data-max="${grade.max}">
                                 <label for="${containerPrefix}${subject.name.replace(/\s+/g, '')}_${grade.name}">${grade.name}</label>
@@ -717,50 +582,37 @@
         }
 
         function initializeStage1() {
-            const lang = translations[currentLang];
             const container = document.getElementById('stage1-container');
             const groupContainer = document.getElementById('group-subjects-container');
             
             container.innerHTML = '';
             groupContainer.innerHTML = '';
             
-            lang.subjects.stage1.forEach((subject, index) => {
+            stage1Subjects.forEach((subject, index) => {
                 container.innerHTML += createSubjectCard(subject, index, false, 'stage1_');
             });
             
-            lang.subjects.stage1Group.forEach((subject, index) => {
+            stage1GroupSubjects.forEach((subject, index) => {
                 groupContainer.innerHTML += createSubjectCard(subject, index, true, 'group_');
             });
         }
 
         function initializeStage2() {
-            const lang = translations[currentLang];
             const container = document.getElementById('stage2-container');
             container.innerHTML = '';
             
-            lang.subjects.stage2.forEach((subject, index) => {
+            stage2Subjects.forEach((subject, index) => {
                 container.innerHTML += createSubjectCard(subject, index, false, 'stage2_');
             });
         }
         
         function initializeStage3() {
-            const lang = translations[currentLang];
             const container = document.getElementById('stage3-container');
             container.innerHTML = '';
             
-            lang.subjects.stage3.forEach((subject, index) => {
+            stage3Subjects.forEach((subject, index) => {
                 container.innerHTML += createSubjectCard(subject, index, false, 'stage3_');
             });
-        }
-
-        function reinitializeCurrentStage() {
-            if (currentStage === '1') {
-                initializeStage1();
-            } else if (currentStage === '2') {
-                initializeStage2();
-            } else if (currentStage === '3') {
-                initializeStage3();
-            }
         }
 
         function handleStageChange() {
@@ -773,4 +625,156 @@
                 section.classList.remove('active');
             });
             
-            if (currentSt
+            if (currentStage === '1') {
+                document.getElementById('stage1-subjects').classList.add('active');
+                initializeStage1();
+            } else if (currentStage === '2') {
+                document.getElementById('stage2-subjects').classList.add('active');
+                initializeStage2();
+            } else if (currentStage === '3') {
+                document.getElementById('stage3-subjects').classList.add('active');
+                initializeStage3();
+            }
+            
+            document.getElementById('calculateBtn').disabled = false;
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function calculateAverage() {
+            if (!currentStage) {
+                alert('يرجى اختيار المرحلة أولاً');
+                return;
+            }
+
+            let totalWeightedScore = 0;
+            let totalWeight = 0;
+            let allSelected = true;
+
+            if (currentStage === '1') {
+                stage1Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
+                    if (selectedGrade) {
+                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
+                        totalWeight += subject.weight;
+                    } else {
+                        allSelected = false;
+                    }
+                });
+
+                let groupWeightedScore = 0;
+                let groupCount = 0;
+                stage1GroupSubjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
+                    if (selectedGrade) {
+                        groupWeightedScore += parseInt(selectedGrade.value);
+                        groupCount++;
+                    } else {
+                        allSelected = false;
+                    }
+                });
+
+                if (groupCount === stage1GroupSubjects.length) {
+                    const avgGroupGrade = groupWeightedScore / groupCount;
+                    totalWeightedScore += avgGroupGrade * 0.26;
+                    totalWeight += 0.26;
+                }
+
+                totalWeight += 0.39;
+                totalWeightedScore += 3 * 0.39; 
+            } else if (currentStage === '2') {
+                stage2Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage2_subject_${index}"]:checked`);
+                    if (selectedGrade) {
+                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
+                        totalWeight += subject.weight;
+                    } else {
+                        allSelected = false;
+                    }
+                });
+            } else if (currentStage === '3') {
+                stage3Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage3_subject_${index}"]:checked`);
+                    if (selectedGrade) {
+                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
+                        totalWeight += subject.weight;
+                    } else {
+                        allSelected = false;
+                    }
+                });
+            }
+
+            if (!allSelected) {
+                alert('يرجى اختيار تقدير لجميع المواد');
+                return;
+            }
+
+            let actualMinScore = 0;
+            let actualMaxScore = 0;
+            
+            if (currentStage === '1') {
+                stage1Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
+                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
+                });
+
+                let groupMin = 0, groupMax = 0;
+                stage1GroupSubjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
+                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                    groupMin += ((gradeData.min / 100) * 5);
+                    groupMax += ((gradeData.max / 100) * 5);
+                });
+                actualMinScore += (groupMin / stage1GroupSubjects.length) * 0.26;
+                actualMaxScore += (groupMax / stage1GroupSubjects.length) * 0.26;
+
+                actualMinScore += ((70 / 100) * 5) * 0.39;
+                actualMaxScore += ((79.99 / 100) * 5) * 0.39;
+            } else if (currentStage === '2') {
+                stage2Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage2_subject_${index}"]:checked`);
+                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
+                });
+            } else if (currentStage === '3') {
+                 stage3Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage3_subject_${index}"]:checked`);
+                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
+                });
+            }
+            
+            const finalMinScore = (actualMinScore / totalWeight).toFixed(2);
+            const finalMaxScore = (actualMaxScore / totalWeight).toFixed(2);
+            const averageScore = ((parseFloat(finalMinScore) + parseFloat(finalMaxScore)) / 2).toFixed(2);
+            
+            const scoreColor = isDarkMode ? '#4facfe' : '#333';
+            const avgColor = isDarkMode ? '#667eea' : '#667eea';
+
+            document.getElementById('average-score').innerHTML = `
+                <div style="font-size: 2rem; color: ${scoreColor}; margin-bottom: 15px;">النطاق المحتمل للمعدل</div>
+                <div style="font-size: 2.5rem; color: ${scoreColor}; margin-bottom: 20px; font-weight: 700;">
+                    ${finalMinScore} - ${finalMaxScore}
+                </div>
+                <div style="font-size: 1.8rem; color: ${avgColor}; border-top: 2px solid rgba(102, 126, 234, 0.2); padding-top: 15px; margin-top: 15px;">
+                    المتوسط التقريبي: <span style="font-weight: 700;">${averageScore}</span>
+                </div>
+            `;
+            
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            
+            document.querySelectorAll('input[name="stage"]').forEach(radio => {
+                radio.addEventListener('change', handleStageChange);
+            });
+        });
+    </script>
+</body>
+</html>
