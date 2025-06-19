@@ -122,34 +122,20 @@
             border: 1px solid #333;
         }
 
-        body.dark-mode .average-display {
-            color: #ffffff;
+        body.dark-mode .average-display, body.dark-mode #average-score, body.dark-mode #average-score div {
+            color: #ffffff !important;
         }
-
+        
         body.dark-mode .average-label {
             color: #cccccc;
         }
-
-        body.dark-mode .legend {
-            background: #111111;
-            border: 1px solid #333;
+        
+        body.dark-mode .info-note {
+             background-color: #2a2a00;
+             color: #f1da7a;
+             border-color: #5a5000;
         }
 
-        body.dark-mode .legend h3 {
-            color: #ffffff;
-        }
-
-        body.dark-mode .legend-item {
-            background: #1a1a1a;
-        }
-
-        body.dark-mode .legend-grade {
-            color: #ffffff;
-        }
-
-        body.dark-mode .legend-range {
-            color: #cccccc;
-        }
 
         /* AMOLED optimizations */
         @media (prefers-color-scheme: dark) {
@@ -163,7 +149,8 @@
             
             body.dark-mode .subject-card,
             body.dark-mode .stage-selector,
-            body.dark-mode .group-subjects {
+            body.dark-mode .group-subjects,
+            body.dark-mode .results {
                 background: #000000;
                 border: 1px solid #222;
             }
@@ -175,11 +162,6 @@
             
             body.dark-mode .grade-option label:hover {
                 background: #111111;
-            }
-            
-            body.dark-mode .results {
-                background: #000000;
-                border: 1px solid #222;
             }
         }
 
@@ -411,6 +393,18 @@
             font-weight: 600;
             margin-right: 10px;
         }
+        
+        .info-note {
+            background-color: #fffbe6;
+            color: #584c03;
+            border: 1px solid #ffeeba;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -435,6 +429,10 @@
                         <input type="radio" id="stage2" name="stage" value="2">
                         <label for="stage2">المرحلة الثانية</label>
                     </div>
+                    <div class="stage-option">
+                        <input type="radio" id="stage3" name="stage" value="3">
+                        <label for="stage3">المرحلة الثالثة</label>
+                    </div>
                 </div>
             </div>
 
@@ -453,6 +451,13 @@
                 <div id="stage2-container"></div>
             </div>
 
+            <div id="stage3-subjects" class="subjects-section">
+                <div class="info-note">
+                    <strong>ملاحظة:</strong> وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.
+                </div>
+                <div id="stage3-container"></div>
+            </div>
+
             <div style="text-align: center; margin: 30px 0;">
                 <button class="calculate-btn" id="calculateBtn" onclick="calculateAverage()" disabled>احسب المعدل</button>
             </div>
@@ -464,7 +469,7 @@
         </div>
         
         <div style="text-align: center; padding: 20px; color: #666; font-size: 1rem; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 20px;">
-            By Muhammad Saadoon | <a href="https://t.me/anemd" target="_blank" style="color: #4facfe; text-decoration: none;">@anemd</a>
+             By Muhammad Saadoon | <a href="https://t.me/anemd" target="_blank" style="color: #4facfe; text-decoration: none;">@anemd</a>
         </div>
     </div>
 
@@ -490,6 +495,17 @@
             { name: 'الامبريو', weight: 0.238 },
             { name: 'الحاسوب', weight: 0.115 },
             { name: 'جرائم حزب البعث', weight: 0.115 }
+        ];
+        
+        // تم تحديث ترتيب المواد هنا
+        const stage3Subjects = [
+            { name: 'امراض', weight: 1.222 },
+            { name: 'جراثيم', weight: 1 },
+            { name: 'ادوية', weight: 0.888 },
+            { name: 'طفيليات', weight: 0.555 },
+            { name: 'طب باطني', weight: 0.555 },
+            { name: 'طب الاسرة', weight: 0.444 },
+            { name: 'جراحة', weight: 0.333 }
         ];
 
         const grades = [
@@ -527,8 +543,8 @@
                     <div class="grade-selector">
                         ${grades.map(grade => `
                             <div class="grade-option">
-                                <input type="radio" id="${containerPrefix}${subject.name}_${grade.name}" name="${containerPrefix}subject_${index}" value="${grade.value}" data-grade="${grade.name}" data-min="${grade.min}" data-max="${grade.max}">
-                                <label for="${containerPrefix}${subject.name}_${grade.name}">${grade.name}</label>
+                                <input type="radio" id="${containerPrefix}${subject.name.replace(/\s+/g, '')}_${grade.name}" name="${containerPrefix}subject_${index}" value="${grade.value}" data-grade="${grade.name}" data-min="${grade.min}" data-max="${grade.max}">
+                                <label for="${containerPrefix}${subject.name.replace(/\s+/g, '')}_${grade.name}">${grade.name}</label>
                             </div>
                         `).join('')}
                     </div>
@@ -560,6 +576,15 @@
                 container.innerHTML += createSubjectCard(subject, index, false, 'stage2_');
             });
         }
+        
+        function initializeStage3() {
+            const container = document.getElementById('stage3-container');
+            container.innerHTML = '';
+            
+            stage3Subjects.forEach((subject, index) => {
+                container.innerHTML += createSubjectCard(subject, index, false, 'stage3_');
+            });
+        }
 
         function handleStageChange() {
             const selectedStage = document.querySelector('input[name="stage"]:checked');
@@ -567,24 +592,22 @@
             
             currentStage = selectedStage.value;
             
-            // Hide all subject sections
             document.querySelectorAll('.subjects-section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Show selected stage subjects
             if (currentStage === '1') {
                 document.getElementById('stage1-subjects').classList.add('active');
                 initializeStage1();
             } else if (currentStage === '2') {
                 document.getElementById('stage2-subjects').classList.add('active');
                 initializeStage2();
+            } else if (currentStage === '3') {
+                document.getElementById('stage3-subjects').classList.add('active');
+                initializeStage3();
             }
             
-            // Enable calculate button
             document.getElementById('calculateBtn').disabled = false;
-            
-            // Hide results
             document.getElementById('results').style.display = 'none';
         }
 
@@ -599,26 +622,22 @@
             let allSelected = true;
 
             if (currentStage === '1') {
-                // Calculate for stage 1 main subjects
                 stage1Subjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
                     if (selectedGrade) {
-                        const gradeValue = parseInt(selectedGrade.value);
-                        totalWeightedScore += gradeValue * subject.weight;
+                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
                         totalWeight += subject.weight;
                     } else {
                         allSelected = false;
                     }
                 });
 
-                // Calculate for stage 1 group subjects
                 let groupWeightedScore = 0;
                 let groupCount = 0;
                 stage1GroupSubjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
                     if (selectedGrade) {
-                        const gradeValue = parseInt(selectedGrade.value);
-                        groupWeightedScore += gradeValue;
+                        groupWeightedScore += parseInt(selectedGrade.value);
                         groupCount++;
                     } else {
                         allSelected = false;
@@ -631,17 +650,23 @@
                     totalWeight += 0.26;
                 }
 
-                // Add computer subject weight
                 totalWeight += 0.39;
-                // Assuming computer gets average grade for now, or you can add it as separate input
-                totalWeightedScore += 3 * 0.39; // Assuming "جيد" grade for computer
+                totalWeightedScore += 3 * 0.39; 
             } else if (currentStage === '2') {
-                // Calculate for stage 2 subjects
                 stage2Subjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="stage2_subject_${index}"]:checked`);
                     if (selectedGrade) {
-                        const gradeValue = parseInt(selectedGrade.value);
-                        totalWeightedScore += gradeValue * subject.weight;
+                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
+                        totalWeight += subject.weight;
+                    } else {
+                        allSelected = false;
+                    }
+                });
+            } else if (currentStage === '3') {
+                stage3Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage3_subject_${index}"]:checked`);
+                    if (selectedGrade) {
+                        totalWeightedScore += parseInt(selectedGrade.value) * subject.weight;
                         totalWeight += subject.weight;
                     } else {
                         allSelected = false;
@@ -654,46 +679,42 @@
                 return;
             }
 
-            const averageGrade = totalWeightedScore / totalWeight;
-            
-            // Calculate actual score range
             let actualMinScore = 0;
             let actualMaxScore = 0;
             
             if (currentStage === '1') {
                 stage1Subjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
-                    if (selectedGrade) {
-                        const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                        actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                        actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                    }
+                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
                 });
 
-                // Add group subjects
                 let groupMin = 0, groupMax = 0;
                 stage1GroupSubjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
-                    if (selectedGrade) {
-                        const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                        groupMin += ((gradeData.min / 100) * 5);
-                        groupMax += ((gradeData.max / 100) * 5);
-                    }
+                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                    groupMin += ((gradeData.min / 100) * 5);
+                    groupMax += ((gradeData.max / 100) * 5);
                 });
                 actualMinScore += (groupMin / stage1GroupSubjects.length) * 0.26;
                 actualMaxScore += (groupMax / stage1GroupSubjects.length) * 0.26;
 
-                // Add computer (assuming "جيد" grade)
                 actualMinScore += ((70 / 100) * 5) * 0.39;
-                actualMaxScore += ((79 / 100) * 5) * 0.39;
-            } else {
+                actualMaxScore += ((79.99 / 100) * 5) * 0.39;
+            } else if (currentStage === '2') {
                 stage2Subjects.forEach((subject, index) => {
                     const selectedGrade = document.querySelector(`input[name="stage2_subject_${index}"]:checked`);
-                    if (selectedGrade) {
-                        const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                        actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                        actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                    }
+                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
+                });
+            } else if (currentStage === '3') {
+                 stage3Subjects.forEach((subject, index) => {
+                    const selectedGrade = document.querySelector(`input[name="stage3_subject_${index}"]:checked`);
+                    const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                    actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                    actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
                 });
             }
             
@@ -701,14 +722,16 @@
             const finalMaxScore = (actualMaxScore / totalWeight).toFixed(2);
             const averageScore = ((parseFloat(finalMinScore) + parseFloat(finalMaxScore)) / 2).toFixed(2);
             
-            // Display results
+            const scoreColor = isDarkMode ? '#4facfe' : '#333';
+            const avgColor = isDarkMode ? '#667eea' : '#667eea';
+
             document.getElementById('average-score').innerHTML = `
-                <div style="font-size: 2.5rem; color: #333; margin-bottom: 15px;">النطاق المحتمل</div>
-                <div style="font-size: 2rem; color: #4facfe; margin-bottom: 10px;">
+                <div style="font-size: 2rem; color: ${scoreColor}; margin-bottom: 15px;">النطاق المحتمل للمعدل</div>
+                <div style="font-size: 2.5rem; color: ${scoreColor}; margin-bottom: 20px; font-weight: 700;">
                     ${finalMinScore} - ${finalMaxScore}
                 </div>
-                <div style="font-size: 1.8rem; color: #667eea; border-top: 2px solid rgba(102, 126, 234, 0.2); padding-top: 15px; margin-top: 15px;">
-                    المتوسط: ${averageScore}
+                <div style="font-size: 1.8rem; color: ${avgColor}; border-top: 2px solid rgba(102, 126, 234, 0.2); padding-top: 15px; margin-top: 15px;">
+                    المتوسط التقريبي: <span style="font-weight: 700;">${averageScore}</span>
                 </div>
             `;
             
@@ -716,12 +739,9 @@
             document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize theme
             initializeTheme();
             
-            // Add event listeners for stage selection
             document.querySelectorAll('input[name="stage"]').forEach(radio => {
                 radio.addEventListener('change', handleStageChange);
             });
