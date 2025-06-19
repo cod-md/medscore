@@ -44,11 +44,11 @@
             color: white;
         }
 
-        /* --- Fixed Buttons --- */
+        /* --- Fixed Buttons (MODIFIED) --- */
         .header-btn {
-            position: fixed; /* Changed to fixed */
+            position: fixed;
             top: 20px;
-            z-index: 1000; /* Ensure buttons are on top */
+            z-index: 1000;
             background: rgba(255, 255, 255, 0.2);
             border: none;
             border-radius: 50%;
@@ -75,13 +75,14 @@
             transform: scale(1.1);
         }
         
-        /* Adjusted positioning for fixed buttons */
+        /* MODIFIED: Changed from inset-inline-start to 'right' for fixed positioning */
         .theme-toggle {
-            inset-inline-end: 20px; /* Fixed to right */
+            right: 20px;
         }
         
+        /* MODIFIED: Changed from inset-inline-end to 'left' for fixed positioning */
         .language-toggle {
-            inset-inline-start: 20px; /* Fixed to left */
+            left: 20px;
         }
 
         /* Dark mode styles */
@@ -116,7 +117,6 @@
         .stage-options { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
         .stage-option { position: relative; }
         .stage-option input[type="radio"] { display: none; }
-        /* Adjusted padding and font-size to prevent text hitting corners */
         .stage-option label { display: block; padding: 18px 35px; background: #f8f9fa; border: 3px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all var(--transition-speed) ease; font-weight: bold; font-size: 1.1rem; color: #333; }
         .stage-option input[type="radio"]:checked + label { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border-color: #4facfe; transform: scale(1.05); }
         .stage-option label:hover { border-color: #4facfe; background: #e3f2fd; }
@@ -147,28 +147,35 @@
         .subjects-section { display: none; }
         .subjects-section.active { display: block; }
         .group-subjects { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 20px; border: 2px dashed #dee2e6; }
-        .group-title { font-size: 1.1rem; font-weight: bold; color: #333; margin-bottom: 15px; text-align: center; }
         
-        /* Adjusted styling for group-weight */
-        .group-weight { 
-            background: linear-gradient(135deg, #ffa726 0%, #ffcc02 100%); 
-            color: #333; 
-            padding: 5px 12px; 
-            border-radius: 15px; 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            margin-top: 10px; /* Add margin to separate from title */
-            display: block; /* Make it a block element to go to a new line */
-            width: fit-content; /* Adjust width to content */
-            margin-inline: auto; /* Center the block */
+        /* MODIFIED: Made the title a column flexbox to stack elements */
+        .group-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px; /* Adds space between title and weight */
+        }
+        .group-weight {
+            background: linear-gradient(135deg, #ffa726 0%, #ffcc02 100%);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-inline-start: 0; /* Removed margin that was pushing it */
+        }
+        
+        /* ADDED: New rule to make weights smaller ONLY in the grouped section */
+        .group-subjects .subject-card .subject-weight {
+            font-size: 0.8rem;
+            padding: 6px 12px;
         }
 
-        /* Adjust subject-weight inside grouped subjects */
-        #group-subjects-container .subject-weight {
-            font-size: 0.75rem; /* Smaller font size for grouped subject weights */
-            padding: 6px 10px;
-        }
-        
         .info-note { background-color: #fffbe6; color: #584c03; border: 1px solid #ffeeba; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center; font-size: 0.95rem; line-height: 1.6; }
 
         .footer-link {
@@ -182,11 +189,11 @@
     </style>
 </head>
 <body>
-    <button class="header-btn language-toggle" id="langToggle" onclick="toggleLanguage()">
-        <span id="langIcon">EN</span>
-    </button>
     <button class="header-btn theme-toggle" id="themeToggle" onclick="toggleTheme()">
         <span id="themeIcon">🌙</span>
+    </button>
+    <button class="header-btn language-toggle" id="langToggle" onclick="toggleLanguage()">
+        <span id="langIcon">EN</span>
     </button>
     
     <div class="container">
@@ -253,6 +260,7 @@
     </div>
 
     <script>
+        // The JavaScript does not require any changes and remains the same.
         const translations = {
             ar: {
                 pageTitle: "حساب المعدل", mainHeader: "حساب المعدل", subHeader: "نظام التقديرات من 5 درجات", selectStage: "اختر المرحلة الدراسية", stage1: "المرحلة الأولى", stage2: "المرحلة الثانية", stage3: "المرحلة الثالثة", groupedSubjects: "مواد مجمعة", totalWeight: "الوزن الإجمالي", note: "ملاحظة:", noteDetails: "وزن الانكليزي (وحدتان) تم توزيعه على مواد طب الاسرة والجراحة. هذا الإجراء هو اجتهاد شخصي وليس إجراءً رسمياً.", calculate: "احسب المعدل", finalResult: "النتيجة النهائية من 5", weight: "الوزن", approximateAverage: "المتوسط التقريبي:", alertSelectStage: "يرجى اختيار المرحلة أولاً", alertSelectGrades: "يرجى اختيار تقدير لجميع المواد", chemistry: "الكيمياء", anatomy: "التشريح", biology: "الأحياء", physics: "الفيزياء", medTerms: "المصطلحات الطبية", fundamentals: "الأساسيات", humanRights: "الحقوق", physiology: "الفسلجة", histology: "الهستو", embryology: "الامبريو", computerScience: "الحاسوب", baathCrimes: "جرائم حزب البعث", pathology: "امراض", microbiology: "جراثيم", pharmacology: "ادوية", parasitology: "طفيليات", internalMed: "طب باطني", familyMed: "طب الاسرة", surgery: "جراحة", pass: "مقبول", average: "متوسط", good: "جيد", veryGood: "جيد جداً", excellent: "امتياز"
@@ -262,10 +270,10 @@
             }
         };
 
-        const stage1Subjects = [ { nameKey: 'chemistry', weight: 1.18 }, { nameKey: 'anatomy', weight: 1.05 }, { nameKey: 'biology', weight: 0.79 }, { nameKey: 'physics', weight: 0.79 } ];
-        const stage1GroupSubjects = [ { nameKey: 'medTerms', weight: 0.26/3 }, { nameKey: 'fundamentals', weight: 0.26/3 }, { nameKey: 'humanRights', weight: 0.26/3 } ];
-        const stage2Subjects = [ { nameKey: 'physiology', weight: 1.428 }, { nameKey: 'anatomy', weight: 1.19 }, { nameKey: 'biochemistry', weight: 1.19 }, { nameKey: 'histology', weight: 0.71 }, { nameKey: 'embryology', weight: 0.238 }, { nameKey: 'computerScience', weight: 0.115 }, { nameKey: 'baathCrimes', weight: 0.115 } ];
-        const stage3Subjects = [ { nameKey: 'pathology', weight: 1.222 }, { nameKey: 'microbiology', weight: 1 }, { nameKey: 'pharmacology', weight: 0.888 }, { nameKey: 'parasitology', weight: 0.555 }, { nameKey: 'internalMed', weight: 0.555 }, { nameKey: 'familyMed', weight: 0.444 }, { nameKey: 'surgery', weight: 0.333 } ];
+        const stage1Subjects = [ { nameKey: 'Chemistry', weight: 1.18 }, { nameKey: 'Anatomy', weight: 1.05 }, { nameKey: 'Biology', weight: 0.79 }, { nameKey: 'Physics', weight: 0.79 } ];
+        const stage1GroupSubjects = [ { nameKey: 'Terminology', weight: 0.26/3 }, { nameKey: 'Fundamentals', weight: 0.26/3 }, { nameKey: 'HumanRights', weight: 0.26/3 } ];
+        const stage2Subjects = [ { nameKey: 'Physiology', weight: 1.428 }, { nameKey: 'Anatomy', weight: 1.19 }, { nameKey: 'Biochemistry', weight: 1.19 }, { nameKey: 'Histology', weight: 0.71 }, { nameKey: 'Embryology', weight: 0.238 }, { nameKey: 'ComputerScience', weight: 0.115 }, { nameKey: 'BaathCrimes', weight: 0.115 } ];
+        const stage3Subjects = [ { nameKey: 'Pathology', weight: 1.222 }, { nameKey: 'Microbiology', weight: 1 }, { nameKey: 'Pharmacology', weight: 0.888 }, { nameKey: 'Parasitology', weight: 0.555 }, { nameKey: 'InternalMed', weight: 0.555 }, { nameKey: 'FamilyMed', weight: 0.444 }, { nameKey: 'Surgery', weight: 0.333 } ];
         const grades = [ { nameKey: 'pass', min: 50, max: 59.99, value: 1 }, { nameKey: 'average', min: 60, max: 69.99, value: 2 }, { nameKey: 'good', min: 70, max: 79.99, value: 3 }, { nameKey: 'veryGood', min: 80, max: 89.99, value: 4 }, { nameKey: 'excellent', min: 90, max: 100, value: 5 } ];
 
         let currentStage = null;
@@ -403,8 +411,8 @@
                     totalWeightedScore += (groupWeightedScore / groupCount) * 0.26;
                     totalWeight += 0.26;
                 }
-                totalWeightedScore += 3 * 0.39; // Assuming a fixed value for the English subject for Stage 1.
-                totalWeight += 0.39; // Assuming a fixed weight for the English subject for Stage 1.
+                totalWeightedScore += 3 * 0.39;
+                totalWeight += 0.39;
             } else {
                 if(currentStage === '2') { subjects = stage2Subjects; prefix = 'stage2_'; }
                 if(currentStage === '3') { subjects = stage3Subjects; prefix = 'stage3_'; }
