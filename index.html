@@ -82,7 +82,8 @@
             border: 1px solid #333;
         }
 
-        body.dark-mode .stage-selector h2 {
+        body.dark-mode .stage-selector h2, 
+        body.dark-mode .stage-selector h3 {
             color: #ffffff;
         }
 
@@ -442,8 +443,23 @@
             </div>
 
             <div id="stage1-subjects" class="subjects-section">
+                <!-- خيار تبديل نظام المرحلة الأولى -->
+                <div class="stage-selector" style="padding: 20px; margin-bottom: 25px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.2rem; color: inherit;">اختر نظام أوزان المرحلة الأولى</h3>
+                    <div class="stage-options" style="gap: 15px;">
+                        <div class="stage-option">
+                            <input type="radio" id="arabicYes1" name="hasArabic1" value="yes" onchange="initializeStage1()" checked>
+                            <label for="arabicYes1" style="padding: 12px 25px; font-size: 1rem;">النظام الحديث (مع عربي)</label>
+                        </div>
+                        <div class="stage-option">
+                            <input type="radio" id="arabicNo1" name="hasArabic1" value="no" onchange="initializeStage1()">
+                            <label for="arabicNo1" style="padding: 12px 25px; font-size: 1rem;">النظام السابق (بدون عربي)</label>
+                        </div>
+                    </div>
+                </div>
+                
                 <div id="stage1-container"></div>
-                <div class="group-subjects">
+                <div id="stage1-group-container-wrapper" class="group-subjects">
                     <div class="group-title">
                         مواد مجمعة 
                         <span class="group-weight">الوزن الإجمالي: 0.26</span>
@@ -453,6 +469,20 @@
             </div>
 
             <div id="stage2-subjects" class="subjects-section">
+                <!-- خيار تبديل نظام المرحلة الثانية -->
+                <div class="stage-selector" style="padding: 20px; margin-bottom: 25px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.2rem; color: inherit;">اختر نظام أوزان المرحلة الثانية</h3>
+                    <div class="stage-options" style="gap: 15px;">
+                        <div class="stage-option">
+                            <input type="radio" id="arabicYes" name="hasArabic" value="yes" onchange="initializeStage2()" checked>
+                            <label for="arabicYes" style="padding: 12px 25px; font-size: 1rem;">النظام الحديث (مع عربي)</label>
+                        </div>
+                        <div class="stage-option">
+                            <input type="radio" id="arabicNo" name="hasArabic" value="no" onchange="initializeStage2()">
+                            <label for="arabicNo" style="padding: 12px 25px; font-size: 1rem;">النظام السابق (بدون عربي)</label>
+                        </div>
+                    </div>
+                </div>
                 <div id="stage2-container"></div>
             </div>
 
@@ -484,7 +514,8 @@
     </div>
 
     <script>
-        const stage1Subjects = [
+        // النظام القديم بدون عربي للمرحلة الأولى
+        const stage1SubjectsOld = [
             { name: 'الكيمياء', weight: 1.18 },
             { name: 'التشريح', weight: 1.05 },
             { name: 'الأحياء', weight: 0.79 },
@@ -492,13 +523,27 @@
             { name: 'الحاسوب', weight: 0.394 }
         ];
 
-        const stage1GroupSubjects = [
+        const stage1GroupSubjectsOld = [
             { name: 'المصطلحات الطبية', weight: 0.26/3 },
             { name: 'الأساسيات', weight: 0.26/3 },
             { name: 'الحقوق', weight: 0.26/3 }
         ];
 
-        const stage2Subjects = [
+        // النظام الحديث مع عربي للمرحلة الأولى
+        const stage1SubjectsNew = [
+            { name: 'التشريح', weight: 8 },
+            { name: 'الأحياء (بايو)', weight: 6 },
+            { name: 'الكيمياء', weight: 6 },
+            { name: 'الفيزياء', weight: 6 },
+            { name: 'الحقوق', weight: 2 },
+            { name: 'الأساسيات', weight: 2 },
+            { name: 'المصطلحات', weight: 2 },
+            { name: 'الحاسوب', weight: 2 },
+            { name: 'عربي', weight: 2 }
+        ];
+
+        // النظام القديم بدون عربي
+        const stage2SubjectsOld = [
             { name: 'الفسلجة', weight: 1.428 },
             { name: 'التشريح', weight: 1.19 },
             { name: 'الكيمياء', weight: 1.19 },
@@ -506,6 +551,18 @@
             { name: 'الامبريو', weight: 0.238 },
             { name: 'الحاسوب', weight: 0.115 },
             { name: 'جرائم حزب البعث', weight: 0.115 }
+        ];
+
+        // النظام الحديث مع عربي (استخدام الوحدات الصحيحة لسهولة القراءة ودقة الحساب)
+        const stage2SubjectsNew = [
+            { name: 'الفسلجة', weight: 13 },
+            { name: 'التشريح', weight: 10 },
+            { name: 'الكيمياء', weight: 8 },
+            { name: 'الهستو', weight: 6 },
+            { name: 'عربي', weight: 2 },
+            { name: 'أجنة', weight: 2 },
+            { name: 'الحاسوب', weight: 2 },
+            { name: 'جرائم', weight: 2 }
         ];
         
         const stage3Subjects = [
@@ -587,17 +644,36 @@
 
         function initializeStage1() {
             const container = document.getElementById('stage1-container');
+            const groupWrapper = document.getElementById('stage1-group-container-wrapper');
             const groupContainer = document.getElementById('group-subjects-container');
+            
             container.innerHTML = '';
             groupContainer.innerHTML = '';
-            stage1Subjects.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage1_'));
-            stage1GroupSubjects.forEach((subject, index) => groupContainer.innerHTML += createSubjectCard(subject, index, true, 'group_'));
+            
+            const isNewSystem = document.getElementById('arabicYes1').checked;
+            
+            if (isNewSystem) {
+                groupWrapper.style.display = 'none';
+                stage1SubjectsNew.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage1_'));
+            } else {
+                groupWrapper.style.display = 'block';
+                stage1SubjectsOld.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage1_'));
+                stage1GroupSubjectsOld.forEach((subject, index) => groupContainer.innerHTML += createSubjectCard(subject, index, true, 'group_'));
+            }
+            
+            document.getElementById('results').style.display = 'none';
         }
 
         function initializeStage2() {
             const container = document.getElementById('stage2-container');
             container.innerHTML = '';
-            stage2Subjects.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage2_'));
+            // اختيار المصفوفة المناسبة بناءً على خيار المستخدم
+            const isNewSystem = document.getElementById('arabicYes').checked;
+            const subjects = isNewSystem ? stage2SubjectsNew : stage2SubjectsOld;
+            
+            subjects.forEach((subject, index) => container.innerHTML += createSubjectCard(subject, index, false, 'stage2_'));
+            // إخفاء النتائج عند تغيير النظام لتجنب الحسابات الخاطئة
+            document.getElementById('results').style.display = 'none';
         }
         
         function initializeStage3() {
@@ -697,33 +773,56 @@
                 let actualMaxScore = 0;
 
                 if (currentStage === '1') {
-                    stage1Subjects.forEach((subject, index) => {
-                        const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
-                        if (selectedGrade) {
-                            const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                            actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
-                            actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
-                            totalWeight += subject.weight;
-                        } else { allSelected = false; }
-                    });
-                    let groupMin = 0, groupMax = 0, groupCount = 0;
-                    stage1GroupSubjects.forEach((subject, index) => {
-                        const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
-                        if (selectedGrade) {
-                            const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
-                            groupMin += ((gradeData.min / 100) * 5);
-                            groupMax += ((gradeData.max / 100) * 5);
-                            groupCount++;
-                        } else { allSelected = false; }
-                    });
-                    if (groupCount === stage1GroupSubjects.length) {
-                        actualMinScore += (groupMin / groupCount) * 0.26;
-                        actualMaxScore += (groupMax / groupCount) * 0.26;
-                        totalWeight += 0.26;
+                    const isNewSystem = document.getElementById('arabicYes1').checked;
+                    
+                    if (isNewSystem) {
+                        stage1SubjectsNew.forEach((subject, index) => {
+                            const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
+                            if (selectedGrade) {
+                                const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                                actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                                actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
+                                totalWeight += subject.weight;
+                            } else { allSelected = false; }
+                        });
+                    } else {
+                        stage1SubjectsOld.forEach((subject, index) => {
+                            const selectedGrade = document.querySelector(`input[name="stage1_subject_${index}"]:checked`);
+                            if (selectedGrade) {
+                                const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                                actualMinScore += ((gradeData.min / 100) * 5) * subject.weight;
+                                actualMaxScore += ((gradeData.max / 100) * 5) * subject.weight;
+                                totalWeight += subject.weight;
+                            } else { allSelected = false; }
+                        });
+                        let groupMin = 0, groupMax = 0, groupCount = 0;
+                        stage1GroupSubjectsOld.forEach((subject, index) => {
+                            const selectedGrade = document.querySelector(`input[name="group_subject_${index}"]:checked`);
+                            if (selectedGrade) {
+                                const gradeData = grades.find(g => g.value === parseInt(selectedGrade.value));
+                                groupMin += ((gradeData.min / 100) * 5);
+                                groupMax += ((gradeData.max / 100) * 5);
+                                groupCount++;
+                            } else { allSelected = false; }
+                        });
+                        if (groupCount === stage1GroupSubjectsOld.length) {
+                            actualMinScore += (groupMin / groupCount) * 0.26;
+                            actualMaxScore += (groupMax / groupCount) * 0.26;
+                            totalWeight += 0.26;
+                        }
                     }
                 } else { // Stages 2 and 3
-                    const subjects = currentStage === '2' ? stage2Subjects : stage3Subjects;
+                    let subjects;
+                    // تحديد المواد بناءً على المرحلة والنظام المختار
+                    if (currentStage === '2') {
+                        const isNewSystem = document.getElementById('arabicYes').checked;
+                        subjects = isNewSystem ? stage2SubjectsNew : stage2SubjectsOld;
+                    } else {
+                        subjects = stage3Subjects;
+                    }
+                    
                     const prefix = currentStage === '2' ? 'stage2_' : 'stage3_';
+                    
                     subjects.forEach((subject, index) => {
                         const selectedGrade = document.querySelector(`input[name="${prefix}subject_${index}"]:checked`);
                         if (selectedGrade) {
